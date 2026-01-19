@@ -139,15 +139,21 @@ export default function Home() {
 
 
                 </div>
-                <div className="text-black hidden md:flex  md:w-[33%] w-full">
-                    <div className="heading flex w-full h-min bg-red-700 ">Area Explore</div>
+                <div className="text-black hidden md:flex h-full  md:w-[33%] w-full">
+                    <div className="map flex w-[97%] text-white h-full overflow-hidden ">
+                        <iframe className="absolute" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3177.8342126484986!2d-122.01385205129783!3d37.33464282724617!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb596e9e188fd%3A0x3b0d8391510688f0!2sApple%20Park!5e0!3m2!1sen!2sin!4v1768729148061!5m2!1sen!2sin" width="480" height="450" style={{ border: "0" }} allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <div className="font-bold text-2xl z-10 w-full h-full bg-blue-900 flex flex-col items-center justify-center ">
+                            Area Explore
+                        </div>
+                        <p>To Get NearBy Shop </p>
+                    </div>
                 </div>
 
             </div>
             {/* catgories */}
             <div className="section heading w-full flex justify-between items-center ">
                 <p className="">Shop By Category </p>
-                    <p className="font-semibold text-blue-600 gap ">View All</p>
+                <p className="font-semibold text-blue-600 gap ">View All</p>
             </div>
             <div className="categories flex w-full text-black bg-blue-200">
                 {categories.map((el, i) => {
@@ -165,7 +171,7 @@ export default function Home() {
 
                 {
                     Products.map((el, i) => {
-                        return (<div className="list h-80 " key={i}>
+                        return (<div className="list h-40 " key={i}>
                             <ProductCard product={el} />
                         </div>)
 

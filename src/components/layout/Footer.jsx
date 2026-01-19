@@ -3,12 +3,12 @@ import BottomMenu from "./BottomMenu";
 const Footer = () => {
   return (
     <>
-      <footer className="bg-gray-900 h-min text-gray-300 w-full ">
+      <footer className="bg-gray-900 h-min text-gray-300 w-full hidden md:block ">
         <div className="flex justify-between w-full ">
           <div className=" flex flex-col">
             <p className="font-extrabold text-2xl">NeoShop</p>
 
-            <p>Sell & Buy Products Near <br />
+            <p>Sell & Buy Products Nearby <br />
               NeoShop is Here with New Ecommerce Solution.
             </p>
 

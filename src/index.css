@@ -169,8 +169,14 @@ nav svg {
 main {
     height: 100%;
     width: 100vw;
-    background-color: var(--sec2-color);
-    color: white;
+    background-color: var(--primary-color);
+    color: rgb(0, 0, 0);
+}
+.flexgrow{
+    flex-grow: 1;
+}
+.flexshrink{
+    flex-shrink: 1;
 }
 section{
     height: 100%;
@@ -224,7 +230,7 @@ button {
 }
 .filter div {
     display: flex;
-    padding: 2 px 15px;
+    padding: 2px 20px;
     margin: 4px 20px;
     font-size: 18px;
     font-weight: 600;
@@ -247,12 +253,46 @@ button {
     opacity: 1;
   }
 }
+.map{
+    margin-top:25px;
+    border-radius: 5px;
+}
 .Alloption{
     animation-name: slide-in;
     animation-duration: .3s;
+    padding-bottom: 20px;
+    overflow-x: visible;
+    background-color: rgba(0, 98, 255, 0.959);
+    color: black;
+    mix-blend-mode: blur(20px);
+}
+.namesInAll{
+    padding: 5px 20px;
+    cursor: pointer;
+    margin: 5px;
+    color: white;
+    transition: .3s;
+}
+.namesInAll:hover{
+    scale: 1.1;
 }
 
 
+@keyframes slow {
+    0%{
+        opacity: 0;
+    }
+    50%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+.cut{
+    animation-name:slow;
+    animation-duration: .7s;
+}
 /* main */
 .Ads {
     display: flex;
@@ -381,11 +421,15 @@ td:hover {
 }
 .list {
     margin: 15px;
-    height: 420px;
+    height: 320px;
+}
+.All{
+    padding: 10px 20px;
+    
 }
 .group {
     cursor: pointer;
-    width: 290px;
+    min-width: 200px;
 }
 .badge {
     padding: 5px 20px;
@@ -433,9 +477,9 @@ h3{
     font-weight: 600;
 }
 /* footer */
-footer{
+/* footer{
     margin-bottom: 500px;
-}
+} */
 li{
     cursor: pointer;
 }
@@ -457,6 +501,9 @@ footer svg:hover{
     footer div {
     /* margin: auto; */
     padding: 5px ;
+}
+.All{
+    padding:10px ;
 }
     .account {
         display: none;
