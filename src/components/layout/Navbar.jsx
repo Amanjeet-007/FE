@@ -8,6 +8,7 @@ const Search = () => {
         <svg xmlns="http://www.w3.org/2000/svg" width='30' viewBox="0 0 24 24" fill="#8c8c8c"><path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"></path></svg>
         <input type="text" placeholder="Search Anything" className='focus:outline-none focus:ring-0' />
       </label>
+      <svg xmlns="http://www.w3.org/2000/svg" height={30} viewBox="0 0 24 24" fill="rgba(118,117,117,1)"><path d="M12 3C11.175 3 10.5 3.675 10.5 4.5C10.5 5.325 11.175 6 12 6C12.825 6 13.5 5.325 13.5 4.5C13.5 3.675 12.825 3 12 3ZM12 18C11.175 18 10.5 18.675 10.5 19.5C10.5 20.325 11.175 21 12 21C12.825 21 13.5 20.325 13.5 19.5C13.5 18.675 12.825 18 12 18ZM12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z"></path></svg>
     </>
 
   )
@@ -37,6 +38,15 @@ const Navbar = ({ filter = true }) => {
   }, [all])
 
   const AllDiv = useRef(null)
+  const AllInMobile =[
+    { name: "Fresh", path: "/" },
+    { name: "Today's Deals", path: "/" },
+    { name: "Sell", path: "/" },
+    { name: "Buy Again", path: "/" },
+    { name: "Gift Card", path: "/" },
+    { name: "Hitory", path: "/" },
+    { name: "Customer Service", path: "/" },
+  ]
   const All = [
     {
       heading: "Trending",
@@ -86,7 +96,6 @@ const Navbar = ({ filter = true }) => {
     { name: "Buy Again", path: "/" },
     { name: "Gift Card", path: "/" },
     { name: "Hitory", path: "/" },
-    { name: "Customer Service", path: "/" },
   ]
 
   return (
@@ -155,7 +164,15 @@ const Navbar = ({ filter = true }) => {
         <div className="Alloption absolute h-[84vh] w-100 top-35 left-0 flex items-center overflow-y-scroll overflow-visible  flex-col" ref={AllDiv}>
           
            <div className="cut fixed right-14 md:left-[23vw] font-bold cursor-pointer text-2xl text-white  border-2 border-blue-300 w-10 flex justify-center z-50" onClick={() => setAll(el => !el)}>X</div>
-          
+           <div className="block md:hidden">
+              {
+                AllInMobile.map((el,i)=>{
+                  return(
+                    <p className="namesInAll text-center" key={i}>{el.name}</p>
+                  )
+                })
+              }
+           </div>
           {
             All.map((el, i) => {
               return (

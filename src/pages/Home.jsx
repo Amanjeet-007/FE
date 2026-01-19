@@ -168,13 +168,11 @@ export default function Home() {
             {/* tranding */}
             <h2 className="heading">Trandings</h2>
             <div className="tranding flex">
-
                 {
                     Products.map((el, i) => {
                         return (<div className="list h-40 " key={i}>
                             <ProductCard product={el} />
                         </div>)
-
                     })
                 }
             </div>
