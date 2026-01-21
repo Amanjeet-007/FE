@@ -9,10 +9,10 @@ const Search = () => {
         <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-slate-400 mr-2" viewBox="0 0 24 24" fill="currentColor">
           <path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"></path>
         </svg>
-        <input 
-          type="text" 
-          placeholder="Search Anything" 
-          className="bg-transparent w-full text-sm outline-none text-slate-700 placeholder:text-slate-400" 
+        <input
+          type="text"
+          placeholder="Search Anything"
+          className="bg-transparent w-full text-sm outline-none text-slate-700 placeholder:text-slate-400"
         />
       </label>
       {/* Mobile Dot Menu */}
@@ -100,15 +100,27 @@ const Navbar = ({ filter = true }) => {
 
       {/* Subnav / Filters */}
       {filter && (
-        <div className= "hidden w-full justify-around md:flex bg-slate-50/80 border-b border-slate-100 h-11 items-center px-4 overflow-x-auto no-scrollbar whitespace-nowrap gap-6 text-sm font-semibold text-slate-500 mten">
+        <div className="hidden w-full justify-around md:flex bg-slate-50/80 border-b border-slate-100 h-11 items-center px-4 overflow-x-auto no-scrollbar whitespace-nowrap gap-6 text-sm font-semibold text-slate-500 mten">
           {filterOptions.map((el, i) => (
-            <div 
-              key={i} 
-              onClick={i === 0 ? () => setAll(true) : null} 
-              className={`flex items-center cursor-pointer hover:text-blue-600 transition-colors ${i === 0 ? 'text-blue-600' : ''}`}
+            <div
+              key={i}
+              onClick={i === 0 ? () => setAll(true) : null}
+              className={`flex items-center cursor-pointer hover:text-blue-600 transition-colors relative ${i === 0 ? 'text-blue-600' : ''}`}
             >
-              {i === 0 && <svg className="mr-1" height={20} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4H21V6H3V4ZM3 11H21V13H3V11ZM3 18H21V20H3V18Z"></path></svg>}
+              {i === 0 && (
+                <svg className="mr-1" height={20} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3 4H21V6H3V4ZM3 11H21V13H3V11ZM3 18H21V20H3V18Z"></path>
+                </svg>
+              )}
+
               {el.name}
+
+              {/* Selling Badge logic */}
+              {el.name.toLowerCase() === 'sell' && (
+                <span className="ml-1.5 px-1.5 py-0.5 text-[10px] bg-red-500 text-white rounded-md uppercase tracking-wider leading-none">
+                  Free
+                </span>
+              )}
             </div>
           ))}
         </div>
@@ -120,36 +132,39 @@ const Navbar = ({ filter = true }) => {
           <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setAll(false)}></div>
           <div className="relative w-full max-w-[300px] bg-white h-full shadow-2xl flex flex-col animate-in slide-in-from-left duration-300 overflow-hidden">
             <div className="bg-blue-600 p-6 text-white shrink-0">
-               <div className="flex justify-between items-center mb-4">
-                 <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center font-bold">Hi</div>
-                 <div onClick={() => setAll(false)} className="cursor-pointer text-2xl font-bold">✕</div>
-               </div>
-               <p className="font-bold text-lg">Hello, Welcome</p>
+              <div className="flex justify-between items-center mb-4">
+                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center font-bold">Hi</div>
+                <div onClick={() => setAll(false)} className="cursor-pointer text-2xl font-bold">✕</div>
+              </div>
+              <p className="font-bold text-lg">Hello, Welcome</p>
             </div>
-            
-            <div className="flex-1 overflow-y-auto p-6 space-y-8 no-scrollbar" ref={AllDiv}>
-               {/* Mobile Quick Links */}
-               <div className="md:hidden space-y-3 pb-6 border-b border-slate-100">
-                 <p className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Quick Access</p>
-                 {AllInMobile.map((el, i) => (
-                   <Link key={i} to={el.path} className="block text-slate-700 font-bold hover:text-blue-600 transition-colors" onClick={() => setAll(false)}>{el.name}</Link>
-                 ))}
-               </div>
 
-               {/* Sections Mapping */}
-               {All.map((section, i) => (
-                 <div key={i} className="space-y-4">
-                    <p className="text-[10px] uppercase font-black text-slate-400 tracking-widest">{section.heading}</p>
-                    <div className="space-y-3">
-                      {section.option.map((opt, j) => (
-                        <Link key={j} to={opt.path} className="flex justify-between items-center text-slate-700 font-bold hover:text-blue-600 group transition-colors" onClick={() => setAll(false)}>
-                          {opt.name}
-                          <svg className="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-                        </Link>
-                      ))}
-                    </div>
-                 </div>
-               ))}
+            <div className="flex-1 overflow-y-auto p-6 space-y-8 no-scrollbar" ref={AllDiv}>
+              {/* Mobile Quick Links */}
+              <div className="md:hidden space-y-3 pb-6 border-b border-slate-100">
+                <p className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Quick Access</p>
+                {AllInMobile.map((el, i) => (
+                  <Link key={i} to={el.path} className="flex items-center text-slate-700 font-bold hover:text-blue-600 transition-colors" onClick={() => setAll(false)}>{el.name} {el.name == "Sell" && <span className="ml-1.5 px-1.5 py-0.5 text-[10px] bg-red-500 text-white rounded-md uppercase tracking-wider leading-none">
+                    Free
+                  </span>
+                  }</Link>
+                ))}
+              </div>
+
+              {/* Sections Mapping */}
+              {All.map((section, i) => (
+                <div key={i} className="space-y-4">
+                  <p className="text-[10px] uppercase font-black text-slate-400 tracking-widest">{section.heading}</p>
+                  <div className="space-y-3">
+                    {section.option.map((opt, j) => (
+                      <Link key={j} to={opt.path} className="flex justify-between items-center text-slate-700 font-bold hover:text-blue-600 group transition-colors" onClick={() => setAll(false)}>
+                        {opt.name}
+                        <svg className="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
