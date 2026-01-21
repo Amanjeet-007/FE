@@ -502,7 +502,7 @@ td:hover {
 
 .group {
     cursor: pointer;
-    min-width: 200px;
+    min-width: 180px;
 }
 
 .badge {

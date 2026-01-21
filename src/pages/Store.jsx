@@ -67,7 +67,7 @@ export default function Store() {
     return (
         <>
             <Navbar />
-            <div className="All grid-cols-2 grid self-center md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-20 mten">
+            <div className="All grid-cols-2  grid self-center md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-20 mten">
                 {Products.map((el, i) => {
                     return (
                         <ProductCard product={el} key={i} />
