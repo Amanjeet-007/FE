@@ -7,6 +7,7 @@ import Store from "./pages/Store.jsx";
 import Profile from "./pages/Profile.jsx";
 import Wishlist from "./pages/Wishlist.jsx";
 import OrderTracker from "./pages/OrderTracker.jsx";
+import Auth from "./pages/Auth.jsx";
 
 export const App = createBrowserRouter([
   {path:"/",element:<Home/>},
@@ -14,6 +15,7 @@ export const App = createBrowserRouter([
   {path:'/store',element:<Store/>},
   {path:'/profile',element:<Profile/>},
   {path:'/wishlist',element:<Wishlist/>},
-  {path:'/track',element:<OrderTracker/>}
+  {path:'/track',element:<OrderTracker/>},
+  {path:'/auth',element:<Auth/>}
   // {path:'/productDetails/:id',element:<ProductDetails/>}
 ])

@@ -15,7 +15,7 @@ export default function OrderTracker() {
     <div className=" bg-gray-50 flex flex-col">
       <Navbar filter={false} />
 
-      <main className="flexgrow container mx-auto px-4 py-6 mb-24 md:mb-10">
+      <main className="flexgrow container mx-auto px-4 py-6 mb-24 md:mb-10 mten">
         <div className="max-w-4xl mx-auto">
           {/* Back Button & Title */}
           <div className="flex items-center gap-4 mb-6">
@@ -57,7 +57,7 @@ export default function OrderTracker() {
                   <div key={step.id} className="relative flex gap-4 pb-10 last:pb-0">
                     {/* The Line */}
                     {index !== orderStatus.length - 1 && (
-                      <div className={`absolute left-[15px] top-8 w-0.5 h-full ${
+                      <div className={`absolute left-6 top-8 w-0.5 h-full ${
                         step.status === 'completed' ? 'bg-indigo-600' : 'bg-gray-200'
                       }`} />
                     )}

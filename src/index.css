@@ -146,14 +146,16 @@ body {
 
 }
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
     width: 0px;
 }
+
 header {
     background-color: var(--sec2-color);
     border: 0px;
 
 }
+
 nav {
     box-shadow: 2px 0px 5px rgb(214, 214, 214);
     color: var(--secondary-color);
@@ -163,35 +165,65 @@ nav {
     justify-content: space-between;
     z-index: 99;
 }
+
 nav svg {
     margin: 0px 10px;
 }
+
 main {
     height: 100%;
     width: 100vw;
     background-color: var(--primary-color);
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
 }
-.flexgrow{
+
+input {
+    color: black;
+}
+
+.logo {
+    padding: 20px 30px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.mten {
+    margin-top: 80px;
+}
+
+.flexgrow {
     flex-grow: 1;
 }
-.flexshrink{
+
+.flexshrink {
     flex-shrink: 1;
 }
-section{
+
+section {
     height: 100%;
     padding-top: 25px;
     color: black;
 }
-.section{
+
+.section {
     padding-top: 20px;
 }
+
 .account {
     display: block;
 }
+
 .menuIcon {
     display: none;
 }
+
 .search_filter {
     display: flex;
     align-items: center;
@@ -199,9 +231,11 @@ section{
     margin-top: 10px;
     padding: 5px;
 }
+
 .search_filter .search {
     display: none;
 }
+
 /* .mainSearch{
     background-color: red;
 } */
@@ -210,24 +244,30 @@ section{
     width: 30vw;
     box-shadow: 2px 2px 5px rgb(209, 209, 209);
 }
+
 .searchlable svg {
     margin: 7px;
 }
+
 svg,
 button {
     cursor: pointer;
 }
+
 .searchlable input {
     padding: 5px;
     font-size: 18px;
     flex-grow: 1;
 }
+
 .searchlable input::highlight {
     border: none;
 }
+
 .filter {
     display: flex;
 }
+
 .filter div {
     display: flex;
     padding: 2px 20px;
@@ -238,26 +278,32 @@ button {
     border-radius: 5px;
     transition: .3s;
 }
+
 .filter div:hover {
     scale: 1.03;
     box-shadow: 0px 2px 3px rgba(211, 211, 211, 0.904);
 }
 
 @keyframes slide-in {
-  from {
-    transform: translateX(-100%); /* Start off-screen to the right */
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0); /* End at its original position */
-    opacity: 1;
-  }
+    from {
+        transform: translateX(-100%);
+        /* Start off-screen to the right */
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        /* End at its original position */
+        opacity: 1;
+    }
 }
-.map{
-    margin-top:25px;
+
+.map {
+    margin-top: 25px;
     border-radius: 5px;
 }
-.Alloption{
+
+.Alloption {
     animation-name: slide-in;
     animation-duration: .3s;
     padding-bottom: 20px;
@@ -266,33 +312,39 @@ button {
     color: black;
     mix-blend-mode: blur(20px);
 }
-.namesInAll{
+
+.namesInAll {
     padding: 5px 20px;
     cursor: pointer;
     margin: 5px;
     color: white;
     transition: .3s;
 }
-.namesInAll:hover{
+
+.namesInAll:hover {
     scale: 1.1;
 }
 
 
 @keyframes slow {
-    0%{
+    0% {
         opacity: 0;
     }
-    50%{
+
+    50% {
         opacity: 0;
     }
-    100%{
+
+    100% {
         opacity: 1;
     }
 }
-.cut{
-    animation-name:slow;
+
+.cut {
+    animation-name: slow;
     animation-duration: .7s;
 }
+
 /* main */
 .Ads {
     display: flex;
@@ -303,17 +355,21 @@ button {
     transform: translateX(-50%);
     margin-top: 20px;
 }
+
 .gap {
     font-size: 20px;
     margin: 10px 35px;
 }
+
 table {
     height: 100%;
 }
+
 tr {
     height: 50%;
     width: 100%;
 }
+
 td {
     margin: 5px;
     width: 45%;
@@ -326,15 +382,17 @@ td {
     transition: .3s;
     background-position: center;
     background-repeat: no-repeat;
-    background-size:contain;
+    background-size: contain;
     border: 2px solid white;
     background-color: white;
     cursor: pointer;
 }
+
 td:hover {
     scale: 1.03;
     box-shadow: 0px 3px 4px rgba(128, 128, 128, 0.795);
 }
+
 .offerTag {
     background-color: #1e3b8ab7;
     position: absolute;
@@ -344,6 +402,7 @@ td:hover {
     font-size: 20px;
     border-bottom-right-radius: 10px;
 }
+
 .more {
     display: flex;
     align-items: center;
@@ -353,6 +412,7 @@ td:hover {
     background-color: rgba(87, 87, 87, 0.79);
     cursor: pointer;
 }
+
 .ad {
     z-index: 0;
     height: 100%;
@@ -364,6 +424,7 @@ td:hover {
     left: 50%;
     transform: translateX(-50%);
 }
+
 .ad div {
     padding: 40px 25px;
     position: absolute;
@@ -371,18 +432,22 @@ td:hover {
     bottom: 0px;
     background: linear-gradient(rgba(255, 255, 255, 0), rgba(33, 33, 33, 0.772));
 }
+
 .ad h2,
 .ad p {
     margin: 10px 0px;
 }
+
 .ad button {
     margin: 10px 0px;
     padding: 10px 25px;
     border-radius: var(--radius-md);
 }
+
 .Ads h1 {
     color: black;
 }
+
 .heading {
     color: black;
     font-size: 25px;
@@ -390,6 +455,7 @@ td:hover {
     margin-top: 20px;
     padding: 0px 30px;
 }
+
 .categories {
     padding: 20px 20px;
     /* flex-wrap: wrap; */
@@ -397,6 +463,7 @@ td:hover {
     width: 100%;
     overflow-x: scroll;
 }
+
 .categories div div {
     background-position: center;
     background-repeat: no-repeat;
@@ -404,11 +471,13 @@ td:hover {
     margin: 10px;
     outline: 5px solid var(--palette-gray-700);
 }
+
 .categories div p {
     margin-top: 10px;
     font-weight: 600;
     color: var(--palette-gray-700);
 }
+
 .tranding {
     margin: 20px 0px;
     padding: 0px 10px;
@@ -416,149 +485,188 @@ td:hover {
     overflow-x: scroll;
     overflow-y: hidden;
 }
+
 .tranding::-webkit-scrollbar {
     width: 0px;
 }
+
 .list {
     margin: 15px;
     height: 320px;
 }
-.All{
+
+.All {
     padding: 10px 20px;
-    
+
 }
+
 .group {
     cursor: pointer;
     min-width: 200px;
 }
+
 .badge {
     padding: 5px 20px;
 }
+
 .heart {
     padding: 7px;
 }
+
 .star {
     padding: 12px;
 }
+
 .star div {
     margin-bottom: 10px;
 }
+
 .group h3 {
     font-size: 20px;
     margin-bottom: 5px;
 }
+
 .price {
     width: 100%;
     margin-top: 10px;
 }
+
 .price button {
     padding: 10px 25px;
 }
-.price{
+
+.price {
     padding: 0px 20px;
 }
-.rating{
+
+.rating {
     justify-content: space-between;
     margin: 20px 0px;
 }
-.rating .cart{
+
+.rating .cart {
     background-color: rgb(25, 93, 230);
 }
+
 /* footer */
 footer {
     padding: 50px 20px;
 }
+
 footer div {
     /* margin: auto; */
     padding: 5px 100px;
 }
-h3{
+
+h3 {
     font-size: 20px;
     font-weight: 600;
 }
-.bottomNav .active{
+
+.bottomNav .active {
     transition: 3s;
     scale: 1.1;
     border-bottom: 2px solid blue;
 }
+
 /* footer */
 /* footer{
     margin-bottom: 500px;
 } */
-li{
+li {
     cursor: pointer;
 }
-li:hover{
+
+li:hover {
     color: white;
 }
-.social li{
+
+.social li {
     margin: 0px 10px;
 }
-footer svg:hover{
+
+footer svg:hover {
     transition: .5s;
     scale: 1.23;
 
 }
+
 @media (max-width:900px) {
-    footer{
+    footer {
         padding-bottom: 100px;
     }
+
     footer div {
-    /* margin: auto; */
-    padding: 5px ;
-}
-.All{
-    padding:10px ;
-}
+        /* margin: auto; */
+        padding: 5px;
+    }
+
+    .All {
+        padding: 10px;
+    }
+
     .account {
         display: none;
     }
+
     .menuIcon {
         display: block;
     }
+
     .search_filter .search {
         display: flex;
         align-items: center;
         justify-content: center;
     }
+
     .mainSearch {
         display: none;
     }
+
     .searchlable {
         width: 90vw;
     }
+
     .ad {
         width: 97vw;
     }
+
     .Ads div {
         width: 100vw;
         flex-direction: row-reverse;
     }
+
+    .mten {
+        margin-top: 0px;
+    }
+
     .filter {
         display: none;
     }
+
     /* tr {
         width: 100%;
     } */
-     table{
+    table {
         width: 100vw;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-     }
-    
+    }
+
     tr {
         width: 100%;
         height: 100%;
         display: flex;
         /* flex-direction: column; */
     }
-    td
-    {
+
+    td {
         height: 100%;
         width: 100%;
     }
+
     .gap {
         margin: 0px;
     }

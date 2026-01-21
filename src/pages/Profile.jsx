@@ -26,7 +26,7 @@ export default function Profile() {
       <Navbar filter={false} />
 
       {/* Main Content Area */}
-      <main className="flexgrow container mx-auto px-4 py-8 mb-20 md:mb-0">
+      <main className="flexgrow container mx-auto px-4 py-8 mb-20 md:mb-0 mten">
         <div className="max-w-6xl mx-auto">
           
           {/* Header / User Intro */}
@@ -81,9 +81,9 @@ export default function Profile() {
             {/* Mobile/Desktop Menu Grid */}
             <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
               {menuItems.map((item, index) => (
-                <Link to={item.path}>
+                <Link to={item.path} key={index}>
                 <button 
-                  key={index}
+                  
                   className="flex items-center p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-100 transition-all text-left group"
                 >
                   <div className={`p-3 rounded-lg bg-gray-50 group-hover:bg-white transition-colors mr-4`}>

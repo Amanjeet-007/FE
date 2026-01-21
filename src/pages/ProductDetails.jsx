@@ -42,7 +42,7 @@ export default function ProductDetails() {
                         {/* Thumbnail Collection */}
                         <div className="w-full mt-4 flex items-center gap-4 overflow-x-auto pb-2">
                             {[1, 2, 3, 4].map((i) => (
-                                <div key={i} className="h-20 w-20 flex-shrink-0 bg-gray-200 rounded-xl cursor-pointer hover:ring-2 ring-black transition-all">
+                                <div key={i} className="h-20 w-20 bg-gray-200 rounded-xl cursor-pointer hover:ring-2 ring-black transition-all">
                                      <img src={`via.placeholder.com`} className="rounded-xl" alt="thumb" />
                                 </div>
                             ))}

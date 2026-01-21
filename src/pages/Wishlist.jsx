@@ -31,7 +31,7 @@ export default function Wishlist() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar filter={false} />
 
-      <main className="flexgrow container mx-auto px-4 py-6 mb-20 md:mb-10">
+      <main className="flexgrow container mx-auto px-4 py-6 mb-20 md:mb-10 mten">
         {/* Header Section */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
