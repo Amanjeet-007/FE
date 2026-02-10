@@ -1,5 +1,5 @@
 import { use, useState } from "react";
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom";
 
 const Search = () => {
     return (

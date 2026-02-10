@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router"; // Aapka original import
+import { Link } from "react-router-dom"; // Aapka original import
 import { useSelector } from "react-redux";
+import useSession from "../../hooks/useSession";
+import { logout } from "../../Api/auth";
+import SignOutModal from "../common/Signout";
 
 const Search = () => {
   return (
@@ -25,6 +28,40 @@ const Navbar = ({ filter = true }) => {
   const authStatus = useSelector((state) => state.auth.value);
   const [all, setAll] = useState(false);
   const AllDiv = useRef(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { removeSession, getSession } = useSession()
+
+  const user = getSession();
+
+  const [res, setRes] = useState(user)
+
+  // 1. This function ONLY opens the modal and closes the sidebar
+const triggerSignOutSideBar = (e) => {
+  e.preventDefault(); // Prevent Link from navigating
+  setAll(false);      // Close the sidebar drawer
+  setIsModalOpen(true); // Open the confirmation modal
+};
+
+// 2. This function actually performs the API logout
+async function handleLogout() {
+  try {
+    const result = await logout();
+    setRes(result);
+    removeSession();
+    console.log("Logged out successfully");
+    setIsModalOpen(false); // Close modal after success
+    window.location.reload();
+  } catch (err) {
+    console.log("Logout failed:", err);
+    setIsModalOpen(false); // Close modal even if it fails
+  }
+}
+
+  useEffect(() => {
+    console.log(res)
+  }, [res]);
+
 
   const AllInMobile = [
     { name: "Fresh", path: "/" }, { name: "Today's Deals", path: "/" },
@@ -44,11 +81,13 @@ const Navbar = ({ filter = true }) => {
     },
     {
       heading: "Programs & Features",
-      option: [{ name: "Gift Cards & Mobile Recharges", path: '/' }, { name: "Amazon Business", path: "/" }, { name: "Handloom and Handicrafts", path: "/" }]
+      option: [{ name: "Gift Cards & Mobile Recharges", path: '/' }, { name: "Neo Business", path: "/" }, { name: "Handloom and Handicrafts", path: "/" }]
     },
+
     {
       heading: "Help & Settings",
-      option: [{ name: " Your Account ", path: '/' }, { name: "Customer Service", path: '/' }, { name: " Sign in", path: '/' }]
+      option: [{ name: " Your Account ", path: '/profile' }, { name: "Customer Service", path: '/service' },
+      { name: (authStatus ? "Sign out" : "Sign in"), path: (authStatus ? "/" : "/auth") }]
     }
   ];
 
@@ -60,6 +99,11 @@ const Navbar = ({ filter = true }) => {
 
   return (
     <header className="w-full bg-white z-[100]">
+      <SignOutModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onConfirm={handleLogout} 
+      />
       {/* Main Navbar */}
       <nav className="h-16 md:h-20 px-4 md:px-8 flex items-center justify-between border-b border-slate-50 fixed top-0 w-full bg-white">
         {/* Menu Icon (Mobile) */}
@@ -136,7 +180,7 @@ const Navbar = ({ filter = true }) => {
                 <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center font-bold">Hi</div>
                 <div onClick={() => setAll(false)} className="cursor-pointer text-2xl font-bold">✕</div>
               </div>
-              <p className="font-bold text-lg">Hello, Welcome</p>
+              <p className="font-bold text-lg">Hello, {user ? `${user.name}` : "Welcome"}</p>
             </div>
 
             <div className="flex-1 overflow-y-auto p-6 space-y-8 no-scrollbar" ref={AllDiv}>
@@ -157,11 +201,20 @@ const Navbar = ({ filter = true }) => {
                   <p className="text-[10px] uppercase font-black text-slate-400 tracking-widest">{section.heading}</p>
                   <div className="space-y-3">
                     {section.option.map((opt, j) => (
-                      <Link key={j} to={opt.path} className="flex justify-between items-center text-slate-700 font-bold hover:text-blue-600 group transition-colors" onClick={() => setAll(false)}>
-                        {opt.name}
-                        <svg className="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-                      </Link>
+                      (opt.name == "Sign out" ?
+                        <Link key={j} to={opt.path} className="flex justify-between items-center font-bold text-red-600 hover:text-blue-600 group transition-colors"
+                          onClick={triggerSignOutSideBar}>
+                          {opt.name}
+                          <svg className="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                        </Link>
+                        :
+                        <Link key={j} to={opt.path} className="flex justify-between items-center text-slate-700 font-bold hover:text-blue-600 group transition-colors" onClick={() => setAll(false)}>
+                          {opt.name}
+                          <svg className="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                        </Link>
+                      )
                     ))}
+                    
                   </div>
                 </div>
               ))}

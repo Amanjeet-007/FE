@@ -1,7 +1,54 @@
 import { useEffect, useState } from "react";
+import { Navigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import { loginUser, signup } from "../Api/auth";
+import { authenticated } from "../redux/features/auth";
+import { setUser } from "../redux/features/user";
+import useSession from '../hooks/useSession.js'
+
+ 
 
 const Login = () => {
+
+  const { saveSession }  = useSession();
+
+  const [inputData, setInputData] = useState({
+    email: "",
+    password: ""
+  })
+
+  function handleChange(e) {
+    // e.preventDefault()
+    setInputData({ ...inputData, [e.target.name]: e.target.value });
+  }
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null)
+
+  const dispactch = useDispatch();
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+
+    // server request and other thing with error handling
+    try {
+
+      const res = await loginUser(inputData)
+      dispactch(authenticated());
+      saveSession(res.data.user)
+      dispactch(setUser(res.data.user));
+      console.log("Login successful.",res)
+    } catch (err) {
+      setError(err?.message || err);
+      console.log("while login getting error", err)
+
+    } finally {
+      setLoading(false)
+    }
+
+  }
+
   // login 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -9,15 +56,16 @@ const Login = () => {
         <h2 className="text-4xl font-extrabold text-blue-900 tracking-tight">Welcome Back</h2>
         <p className="text-blue-600/60 mt-2 font-medium">Log in to your premium shopping account.</p>
       </div>
-      <form className="space-y-4">
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="group">
-          <input type="email" className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300" placeholder="Email Address" />
+          <input onChange={handleChange} name="email" type="email" className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300" placeholder="Email Address" />
         </div>
         <div className="group">
-          <input type="password" className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300" placeholder="Password" />
+          <input onChange={handleChange} name="password" type="password" className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300" placeholder="Password" />
         </div>
+        {error && <p className="text-red-500 text-sm">{error.message}</p>}
         <button className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 active:scale-[0.98] transition-all shadow-xl shadow-blue-200">
-          Sign In
+          {loading ? "Signing in..." : "Sign In"}
         </button>
       </form>
     </div>
@@ -25,19 +73,55 @@ const Login = () => {
 };
 
 const Signup = () => {
+  const [a, seta] = useState(false); // for temp check to navigate to home page after success
+  const [form, setForm] = useState({
+    'name': "",
+    'email': '',
+    'password': "",
+  })
+  const { saveSession }  = useSession();
+
+
+  function handleChange(e) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const dispactch = useDispatch()
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await signup(form);
+      dispactch(authenticated());
+      saveSession(res.data.user)
+      dispactch(setUser(res.data.user));
+    } catch (err) {
+      setError(err)
+      return console.log("signup error", err)
+    } finally {
+      setLoading(false)
+    }
+
+  }
+
   // singup api 
   return (
+
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="text-center md:text-left">
         <h2 className="text-4xl font-extrabold text-blue-900 tracking-tight">Create Account</h2>
         <p className="text-blue-600/60 mt-2 font-medium">Join us for exclusive deals and faster checkout.</p>
       </div>
-      <form className="space-y-4">
-        <input type="text" className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300" placeholder="Full Name" />
-        <input type="email" className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300" placeholder="Email Address" />
-        <input type="password" className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300" placeholder="Password" />
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <input type="text" onChange={handleChange} className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300" name="name" placeholder="Full Name" />
+        <input type="email" onChange={handleChange} name="email" className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300" placeholder="Email Address" />
+        <input type="password" onChange={handleChange} name="password" className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300" placeholder="Password" />
+        {error && <p className="text-red-500 text-sm">{error.message}</p>}
         <button className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 active:scale-[0.98] transition-all shadow-xl shadow-blue-200">
-          Join Now
+          {loading ? "Signing in..." : "Join Now"}
         </button>
       </form>
     </div>
@@ -51,10 +135,15 @@ export default function Auth() {
 
 
   //redux se puchhna higa ki authenticated user hai ki nahi
-  useEffect(() => {
-    console.log(isAuth)
+  const { getSession } = useSession()
 
-  }, [])
+  const user = getSession()
+
+  if (user) {
+    return (
+      <Navigate to='/' replace />
+    )
+  }
 
 
   return (

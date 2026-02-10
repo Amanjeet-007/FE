@@ -1,5 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const userInfo = (()=>{
+    try{
+        const Info = JSON.parse(localStorage.getItem('session'))
+        if(!Info){ return null}
+        const now = Date.now();
+
+        if (now > Info.expiryTime) {
+            return null;
+        }
+        return Info.user
+    }catch(err){
+        return null
+    }
+})()
+
 const userSlice = createSlice({
     name: "user",
 
@@ -8,7 +23,7 @@ const userSlice = createSlice({
     //     setUser :(state,action)=>{state.data = action.payload}
     // }
 
-    initialState: null,
+    initialState: userInfo,
     reducers: { // return
         setUser: (state, action) => {
             return action.payload;

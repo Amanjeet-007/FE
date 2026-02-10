@@ -34,6 +34,7 @@ const Products = [
 export default function Home() {
     const [index, setIndex] = useState(0)
     const authStatus = useSelector((state) => state.auth.value);
+    
 
     return (
         <div className="bg-slate-50 min-h-screen font-sans">

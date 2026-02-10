@@ -1,23 +1,15 @@
-import axios from 'axios'
+import api from './axios'
 import { useSelector , useDispatch } from 'react-redux'
 
 
 export const signup = async (data)=>{
-    try{
-        await axios.post("http://localhost:5000/api/register",data).then(res=>{return res}).catch(err=>console.log(err))
-        console.log("signup process complete")
-    }catch(err){
-        console.log(err)
-        return(err)
-    }
+   return api.post('/register', data);
 }
 
-export const login = async (data)=>{
-    try{
-        await axios.post("http://localhost:5000/api/login",data).then(res=>{return res}).catch(err=>console.log(err))
-        console.log("login process complete")
-    }catch(err){
-        console.log(err)
-        return(err)
-    }
+export const loginUser = (data) => {
+  return api.post("/login", data);
+};
+
+export const logout = () =>{
+  return api.post("/logout")
 }
