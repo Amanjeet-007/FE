@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; 
 import { useSelector } from "react-redux";
 import useSession from "../../hooks/useSession";
@@ -13,7 +14,7 @@ function VarifyPopUp({ onClose, email }) {
   const [otp, setOtp] = useState("");
 
   return (
-    <div className="fixed inset-0 z-[300] flex items-center justify-center px-4">
+    <div className="fixed inset-0 z-300 flex items-center justify-center px-4">
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose}></div>
       <div className="relative bg-white w-full max-w-md rounded-xl p-6 shadow-lg animate-in zoom-in-95 duration-200">
         <div className="text-center">
@@ -233,7 +234,7 @@ const Navbar = ({ filter = true }) => {
 
       {/* Right Sidebar (Notifications) */}
       {showNoti && (
-        <div className="fixed inset-0 z-[250] flex justify-end">
+        <div className="fixed inset-0 z-250 flex justify-end">
           <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setShowNoti(false)}></div>
           <div className="relative w-full max-w-75 bg-white h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
             <div className="bg-blue-600 p-6 text-white flex justify-between items-center">
@@ -258,7 +259,7 @@ const Navbar = ({ filter = true }) => {
 
       {/* Left Sidebar (Menu) */}
       {all && (
-        <div className="fixed inset-0 z-[200] flex">
+        <div className="fixed inset-0 z-200 flex">
           <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setAll(false)}></div>
           <div className="relative w-full max-w-75 bg-white h-full shadow-2xl flex flex-col animate-in slide-in-from-left duration-300 overflow-hidden">
             <div className="bg-blue-600 p-6 text-white shrink-0">
