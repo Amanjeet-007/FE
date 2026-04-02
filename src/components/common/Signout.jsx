@@ -1,5 +1,5 @@
-import React from 'react';
-import { LogOut, X } from 'lucide-react';
+/* eslint-disable react/prop-types */
+import { LogOut, X } from "lucide-react";
 
 const SignOutModal = ({ isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;
@@ -7,16 +7,15 @@ const SignOutModal = ({ isOpen, onClose, onConfirm }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop - blurred for a premium feel */}
-      <div 
+      <div
         className="absolute inset-0 bg-[#002147]/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Modal Card */}
       <div className="relative bg-white w-full max-w-sm rounded-2xl shadow-2xl border border-slate-100 overflow-hidden transform transition-all">
-        
         {/* Close Button */}
-        <button 
+        <button
           onClick={onClose}
           className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
         >
@@ -33,7 +32,8 @@ const SignOutModal = ({ isOpen, onClose, onConfirm }) => {
             Signing Out?
           </h3>
           <p className="text-slate-500 mb-8">
-            Are you sure you want to log out? You'll need to sign back in to access your orders and saved items.
+            Are you sure you want to log out? You&#39;ll need to sign back in to
+            access your orders and saved items.
           </p>
 
           <div className="flex flex-col gap-3">
@@ -56,7 +56,7 @@ const SignOutModal = ({ isOpen, onClose, onConfirm }) => {
         </div>
 
         {/* Bottom Accent Bar */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-blue-400 to-[#002147]" />
+        <div className="h-1.5 w-full bg-linear-to-r from-blue-400 to-[#002147]" />
       </div>
     </div>
   );

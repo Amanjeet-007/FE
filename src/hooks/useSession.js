@@ -5,6 +5,8 @@ import { clearUser } from "../redux/features/user.js";
 
 const expiryDuration = 1 * 60 * 60 * 1000;
 
+// user details
+
 export default function useSession() {
     const dispatch = useDispatch(); // Hook ko yahan top par rakhein
 

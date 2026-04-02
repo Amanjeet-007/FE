@@ -1,0 +1,1 @@
+// notification side bar which should come when click event happend in somwhere it's know through props and 

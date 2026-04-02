@@ -53,6 +53,7 @@ export default function Profile() {
 
   useEffect(() => {
     console.log('local', user);
+    console.log(user.varified)
   }, [user]);
 
   if (!user) {
@@ -134,7 +135,7 @@ export default function Profile() {
                     <div className={`p-3 rounded-lg bg-gray-50 group-hover:bg-white transition-colors mr-4`}>
                       <item.icon className={item.color} size={24} />
                     </div>
-                    <div className="flex-grow">
+                    <div className="grow">
                       <h3 className="font-semibold text-gray-900">{item.label}</h3>
                       <p className="text-xs text-gray-500 line-clamp-1">{item.desc}</p>
                     </div>
