@@ -1,131 +1,133 @@
-import React, { useState } from 'react';
-import { Trash2, Minus, Plus, ArrowLeft, ShoppingBag } from 'lucide-react';
+/* eslint-disable no-unused-vars */
+import { useEffect, useState, useCallback } from "react";
+import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
-
+import { getCart, deleteProductFromCart } from "../Api/cart";
+import { Link } from "react-router-dom";
 export default function Cart() {
-    const [cartItems, setCartItems] = useState([
-        {
-            id: 1,
-            name: "Premium Wireless Headphones",
-            price: 299.99,
-            quantity: 1,
-            color: "Space Gray",
-            image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200",
-        },
-        {
-            id: 2,
-            name: "Minimalist Leather Watch",
-            price: 150.00,
-            quantity: 2,
-            color: "Tan/Silver",
-            image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200",
-        }
-    ]);
+  const [cart, setCart] = useState({ items: [], totalPrice: 0 });
+  const [loading, setLoading] = useState(true);
 
-    const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    const shipping = 15.00;
-    const total = subtotal + shipping;
+  // Define fetchCart outside so it can be reused
+  const fetchCart = async () => {
+    try {
+      const res = await getCart();
+      setCart({
+        items: res.items || [],
+        totalPrice: res.totalPrice || 0,
+      });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return (
-        <div className="min-h-screen bg-gray-50 flex flex-col">
-            <Navbar filter={false} />
+  useEffect(() => {
+    fetchCart();
+  }, []); // Empty dependency array: only runs on mount
 
-            <main className="flexgrow container px-4 py-6 ">
-                <div className="flex items-center gap-4 mb-6">
-                    <button className="md:hidden p-2 bg-white rounded-full shadow-sm">
-                        <ArrowLeft size={20} />
-                    </button>
-                    <h1 className="text-2xl font-bold text-gray-900">Your Cart ({cartItems.length})</h1>
+  const handleDelete = async (id) => {
+    // 1. Optimistic Update: Remove from UI immediately
+    const previousItems = [...cart.items];
+    setCart((prev) => ({
+      ...prev,
+      items: prev.items.filter((item) => item.productId !== id),
+    }));
+
+    try {
+      await deleteProductFromCart(id);
+      console.log("Deleted successfully");
+    } catch (err) {
+      // 2. Rollback if API fails
+      setCart((prev) => ({ ...prev, items: previousItems }));
+      alert("Failed to delete item");
+    }
+  };
+
+  const subtotal = cart.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const shipping = cart.items.length > 0 ? 15 : 0;
+  const total = subtotal + shipping;
+
+  if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+
+  return (
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
+            <ShoppingBag /> Your Cart ({cart.items.length})
+          </h1>
+
+          {cart.items.length === 0 ? (
+            <div className="text-center py-20 bg-white rounded-2xl shadow-sm">
+              <h2 className="text-xl font-semibold text-gray-400">Your cart is empty</h2>
+              <Link to="/store"><button className="mt-4 text-indigo-600 font-medium">Continue Shopping</button></Link>
+            </div>
+          ) : (
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* LEFT: CART ITEMS */}
+              <div className="lg:w-2/3 space-y-4">
+                {cart.items.map((item) => (
+                  <div key={item.productId} className="bg-white p-4 rounded-xl shadow-sm flex gap-4 hover:shadow-md transition-shadow">
+                    <img src={item.image} alt={item.name} className="w-24 h-24 object-cover rounded-lg border" />
+                    
+                    <div className="flex flex-col justify-between grow">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-semibold text-lg text-gray-800">{item.name}</h3>
+                          <p className="text-gray-500 text-sm">Unit Price: ₹{item.price}</p>
+                        </div>
+                        <button 
+                          onClick={() => handleDelete(item.productId)}
+                          className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                        >
+                          <Trash2 size={20} />
+                        </button>
+                      </div>
+
+                      <div className="flex justify-between items-center mt-2">
+                        {/* Simple Quantity Display (Add buttons here later) */}
+                        <div className="flex items-center border rounded-lg px-2 py-1 gap-3">
+                           <span className="text-sm font-medium">Qty: {item.quantity}</span>
+                        </div>
+                        <span className="font-bold text-indigo-600">₹{item.price * item.quantity}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* RIGHT: SUMMARY */}
+              <div className="lg:w-1/3">
+                <div className="bg-white p-6 rounded-2xl shadow-sm sticky top-10 border border-gray-100">
+                  <h2 className="text-lg font-bold mb-4">Order Summary</h2>
+                  <div className="space-y-3 text-gray-600">
+                    <div className="flex justify-between">
+                      <span>Subtotal</span>
+                      <span className="font-medium text-gray-900">₹{subtotal}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Shipping</span>
+                      <span className="font-medium text-gray-900">₹{shipping}</span>
+                    </div>
+                    <div className="border-t pt-3 flex justify-between font-bold text-xl text-gray-900">
+                      <span>Total</span>
+                      <span>₹{total}</span>
+                    </div>
+                  </div>
+                  <button className="w-full mt-6 bg-indigo-600 text-white py-4 rounded-xl font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-[0.98] transition-all">
+                    Proceed to Checkout
+                  </button>
                 </div>
-
-                {cartItems.length > 0 ? (
-                    <div className="flex flex-col lg:flex-row gap-8">
-
-                        {/* 1. PRODUCT LIST (Left Column) */}
-                        <div className="lg:w-2/3 space-y-4">
-                            {cartItems.map((item) => (
-                                <div key={item.id} className="bg-white p-4 rounded-2xl border border-gray-100 flex gap-4 items-center shadow-sm">
-                                    {/* Image */}
-                                    <div className="w-24 h-24 md:w-32 md:h-32 bg-gray-100 rounded-xl overflow-hidden flexshrink">
-                                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                                    </div>
-
-                                    {/* Details */}
-                                    <div className="flexgrow flex flex-col justify-between h-24 md:h-32">
-                                        <div className="flex justify-between items-start">
-                                            <div>
-                                                <h3 className="font-semibold text-gray-900 text-sm md:text-lg line-clamp-1">{item.name}</h3>
-                                                <p className="text-xs text-gray-500 mt-1">{item.color}</p>
-                                            </div>
-                                            <button className="text-gray-400 hover:text-red-500 p-1">
-                                                <Trash2 size={18} />
-                                            </button>
-                                        </div>
-
-                                        <div className="flex justify-between items-end">
-                                            <span className="font-bold text-lg text-gray-900">${item.price.toFixed(2)}</span>
-
-                                            {/* Quantity Selector */}
-                                            <div className="flex items-center bg-gray-100 rounded-lg p-1">
-                                                <button className="p-1 hover:bg-white rounded-md transition-colors"><Minus size={14} /></button>
-                                                <span className="px-3 text-sm font-semibold">{item.quantity}</span>
-                                                <button className="p-1 hover:bg-white rounded-md transition-colors"><Plus size={14} /></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* 2. ORDER SUMMARY (Right Column) */}
-                        <div className="lg:w-1/3">
-                            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm sticky top-24">
-                                <h2 className="text-lg font-bold text-gray-900 mb-4">Order Summary</h2>
-
-                                <div className="space-y-3 pb-4 border-bottom border-gray-100">
-                                    <div className="flex justify-between text-gray-600">
-                                        <span>Subtotal</span>
-                                        <span>${subtotal.toFixed(2)}</span>
-                                    </div>
-                                    <div className="flex justify-between text-gray-600">
-                                        <span>Shipping</span>
-                                        <span>${shipping.toFixed(2)}</span>
-                                    </div>
-                                    <div className="flex justify-between text-gray-600">
-                                        <span>Tax</span>
-                                        <span className="text-xs text-gray-400">Calculated at checkout</span>
-                                    </div>
-                                </div>
-
-                                <div className="flex justify-between border-t border-gray-100 pt-4 mt-4 mb-6">
-                                    <span className="text-lg font-bold">Total</span>
-                                    <span className="text-xl font-extrabold text-indigo-600">${total.toFixed(2)}</span>
-                                </div>
-
-                                <button className="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-indigo-700 active:scale-95 transition-all shadow-lg shadow-indigo-100">
-                                    Checkout Now
-                                </button>
-
-                                <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-400 uppercase font-semibold">
-                                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                                    Secure Checkout Guaranteed
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                ) : (
-                    <div className="flex flex-col items-center justify-center py-20">
-                        <ShoppingBag size={64} className="text-gray-200 mb-4" />
-                        <h2 className="text-xl font-bold text-gray-900">Your cart is empty</h2>
-                        <button className="mt-4 text-indigo-600 font-semibold hover:underline">Return to Shop</button>
-                    </div>
-                )}
-            </main>
-
-
-            <Footer />
+              </div>
+            </div>
+          )}
         </div>
-    );
+      </div>
+      <Footer />
+    </>
+  );
 }

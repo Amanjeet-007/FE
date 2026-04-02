@@ -1,6 +1,4 @@
 import api from './axios'
-import { useSelector , useDispatch } from 'react-redux'
-
 
 export const signup = async (data)=>{
    return api.post('/register', data);

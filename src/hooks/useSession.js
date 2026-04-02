@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { logout } from "../redux/features/auth.js";
+import { logout  } from "../redux/features/auth.js";
 import { clearUser } from "../redux/features/user.js";
 
 const expiryDuration = 1 * 60 * 60 * 1000;
@@ -38,7 +38,7 @@ export default function useSession() {
             return null;
         }
         
-        return data.user;
+        return data.user
     }, [dispatch]); // dispatch ko dependency mein dalein
 
     const removeSession = useCallback(() => {
@@ -47,5 +47,5 @@ export default function useSession() {
         dispatch(clearUser());
     }, [dispatch]);
 
-    return { saveSession, getSession, removeSession };
+    return { saveSession, getSession, removeSession};
 }

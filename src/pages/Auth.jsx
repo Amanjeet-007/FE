@@ -38,7 +38,7 @@ const Login = () => {
       dispactch(authenticated());
       saveSession(res.data.user)
       dispactch(setUser(res.data.user));
-      console.log("Login successful.",res)
+      // console.log("Login successful.",res)
     } catch (err) {
       setError(err?.message || err);
       console.log("while login getting error", err)
