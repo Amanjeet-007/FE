@@ -11,3 +11,6 @@ export const loginUser = (data) => {
 export const logout = () =>{
   return api.post("/logout")
 }
+export const varifyEmail = (OTP)=>{
+  return api.post('/emailvarify',OTP)
+}
