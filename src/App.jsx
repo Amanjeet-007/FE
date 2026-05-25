@@ -12,6 +12,8 @@ import CustomerService from "./pages/Service.jsx"
 import Deskboard from './pages/Deskboard.jsx'
 import BecomeSeller from "./pages/BecomeASeller.jsx";
 
+//deploy new
+
 export const App = createBrowserRouter([
   {path:"/",element:<Home/>},
   {path:'/cart',element:<Cart/>},
