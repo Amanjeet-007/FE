@@ -11,6 +11,12 @@ export const loginUser = (data) => {
 export const logout = () =>{
   return api.post("/logout")
 }
-export const varifyEmail = (OTP)=>{
-  return api.post('/emailvarify',OTP)
+export const OTPstatus = ()=>{
+  return api.get('/otpstatus')
+}
+export const sendOTP = ()=>{
+  return api.get('/sendotp');
+}
+export const varifyOTP = (data)=>{
+  return api.post("/varifyOtp",{OTP:data})
 }

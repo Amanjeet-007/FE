@@ -1,42 +1,167 @@
+//* eslint-disable react-hooks/exhaustive-deps */
+//* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; 
+import Logo from "../common/Logo";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import useSession from "../../hooks/useSession";
-import { logout } from "../../Api/auth";
+import { logout, varifyOTP } from "../../Api/auth";
 import SignOutModal from "../common/Signout";
 import { searchProduct } from "../../Api/product";
 import HighlightMatch from "../common/HighlightMatch";
+import { sendOTP, OTPstatus } from "../../Api/auth";
+import Loader from "../common/Loader";
 
 // Verification Popup Component
 function VarifyPopUp({ onClose, email }) {
+  const [time, setTime] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState("");
+  const [response, setResponse] = useState("");
+  const { saveSession } = useSession();
+
+  // ⏱️ Format mm:ss
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  };
+
+  // ✅ SINGLE TIMER (React way)
+  useEffect(() => {
+    if (time <= 0) return;
+
+    const timer = setInterval(() => {
+      setTime((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [time]);
+
+  // ✅ Check existing OTP expiry on load
+  useEffect(() => {
+    async function check() {
+      try {
+        const res = await OTPstatus();
+        const expiry = Number(res.data.time_to_exp);
+
+        const remaining = expiry - Date.now();
+
+        if (remaining > 0) {
+          setTime(Math.floor(remaining / 1000));
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    check();
+  }, []);
+
+  // ✅ Verify OTP
+  async function varify(OTP) {
+    try {
+      setLoading(true);
+
+      const res = await varifyOTP(OTP);
+      const user = res.data.user;
+
+      saveSession(user);
+      setTimeout(() => {
+        onClose();
+      }, 500);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  }
+
+  // ✅ Send OTP (uses backend expiry)
+  async function send() {
+    try {
+      setLoading(true);
+
+      const res = await sendOTP();
+
+      const expiry = Number(res.data.expTime);
+      const remaining = expiry - Date.now();
+
+      if (remaining > 0) {
+        setTime(Math.floor(remaining / 1000));
+      }
+
+      setResponse("sended");
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  }
 
   return (
-    <div className="fixed inset-0 z-300 flex items-center justify-center px-4">
-      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="relative bg-white w-full max-w-md rounded-xl p-6 shadow-lg animate-in zoom-in-95 duration-200">
-        <div className="text-center">
-          <h3 className="text-xl font-bold text-slate-700">Verify Email</h3>
-          <p className="text-slate-500 mt-2 text-sm">Sent to: {email || "your email"}</p>
-        </div>
-        <div className="mt-6 space-y-4">
-          <input
-            type="text"
-            maxLength="6"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            placeholder="Enter OTP"
-            className="w-full text-center py-3 bg-slate-100 border border-gray-600 rounded-xl outline-none focus:border-blue-500"
-          />
-          <button className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-200" onClick={() => console.log(otp)}>
-            Verify
-          </button>
-          <button onClick={onClose} className="w-full text-gray-400 text-sm">Cancel</button>
+    <Loader loading={loading} type="blur">
+      <div className="fixed inset-0 z-300 flex items-center justify-center px-4">
+        <div
+          className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+          onClick={onClose}
+        ></div>
+
+        <div className="relative bg-white w-full max-w-md rounded-xl p-6 shadow-lg animate-in zoom-in-95 duration-200">
+          {/* Close */}
+          <div
+            className="absolute right-6 top-4 cursor-pointer"
+            onClick={onClose}
+          >
+            ✖
+          </div>
+
+          {/* Header */}
+          <div className="text-center">
+            <h3 className="text-xl font-bold text-slate-700">Verify Email</h3>
+            <p className="text-slate-500 mt-2 text-sm">
+              Sent to: {email || "your email"}
+            </p>
+          </div>
+
+          {/* Body */}
+          <div className="mt-6 space-y-4">
+            <input
+              type="text"
+              maxLength="6"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              placeholder="Enter OTP"
+              className="w-full text-center py-3 bg-slate-100 border border-gray-600 rounded-xl outline-none focus:border-blue-500"
+            />
+
+            <button
+              className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-200"
+              onClick={() => varify(otp)}
+            >
+              Verify
+            </button>
+
+            {/* Resend Button */}
+            <button
+              className={`w-full text-sm font-medium ${
+                time > 0 ? "text-gray-400 cursor-not-allowed" : "text-blue-600"
+              }`}
+              onClick={time <= 0 ? send : undefined}
+              disabled={time > 0 || loading}
+            >
+              {loading
+                ? "Sending..."
+                : time > 0
+                  ? `Resend in ${formatTime(time)}`
+                  : "Resend OTP"}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </Loader>
   );
 }
 
@@ -48,7 +173,10 @@ const Search = () => {
   useEffect(() => {
     if (!query) setSuggestions([]);
     const delay = setTimeout(async () => {
-      if (query.length < 2) { setSuggestions([]); return; }
+      if (query.length < 2) {
+        setSuggestions([]);
+        return;
+      }
       const res = await searchProduct(query);
       setSuggestions(res);
     }, 400);
@@ -56,7 +184,8 @@ const Search = () => {
   }, [query]);
 
   const handleKeyDown = (e) => {
-    if (e.key === "ArrowDown") setActiveIndex((prev) => Math.min(prev + 1, suggestions.length - 1));
+    if (e.key === "ArrowDown")
+      setActiveIndex((prev) => Math.min(prev + 1, suggestions.length - 1));
     if (e.key === "ArrowUp") setActiveIndex((prev) => Math.max(prev - 1, 0));
     if (e.key === "Enter" && activeIndex >= 0) {
       setQuery(suggestions[activeIndex].name);
@@ -67,7 +196,12 @@ const Search = () => {
   return (
     <div className="flex items-center w-full px-4 py-3 md:py-0 relative">
       <label className="flex items-center w-full bg-slate-100 rounded-2xl px-4 py-2 border border-gray-600 focus-within:border-blue-500 focus-within:bg-white transition-all duration-300">
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-slate-400 mr-2" viewBox="0 0 24 24" fill="currentColor">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-6 h-6 text-slate-400 mr-2"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
           <path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"></path>
         </svg>
         <input
@@ -76,7 +210,8 @@ const Search = () => {
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Search Anything"
-          className="bg-transparent w-full text-sm outline-none text-slate-700 placeholder:text-slate-400"
+          className="w-full px-5 rounded-full bg-gray-100 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition
+  "
         />
       </label>
       {suggestions.length > 0 && (
@@ -84,11 +219,16 @@ const Search = () => {
           {suggestions.map((item, index) => (
             <div
               key={item._id}
-              onClick={() => { setQuery(item.name); setSuggestions([]); }}
+              onClick={() => {
+                setQuery(item.name);
+                setSuggestions([]);
+              }}
               className={`flex items-center px-4 py-3 text-sm cursor-pointer transition ${index === activeIndex ? "bg-blue-50 text-blue-600" : "text-gray-700 hover:bg-gray-100"}`}
             >
               <span className="mr-2 text-gray-400">🔍</span>
-              <span className="truncate"><HighlightMatch text={item.name} query={query} /></span>
+              <span className="truncate">
+                <HighlightMatch text={item.name} query={query} />
+              </span>
             </div>
           ))}
         </div>
@@ -104,15 +244,11 @@ const Navbar = ({ filter = true }) => {
   const [popup, setPopup] = useState(false); // Verification Popup
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { removeSession, getSession } = useSession();
+  const [notifications, setNotification] = useState([]);
   const user = getSession();
 
   const [res, setRes] = useState(user);
   const [role, setRole] = useState(null);
-
-  // Notifications logic
-  const notifications = [
-    { name: "verification", message: "Please verify your email by entering your OTP." }
-  ];
 
   const triggerSignOutSideBar = (e) => {
     e.preventDefault();
@@ -132,7 +268,19 @@ const Navbar = ({ filter = true }) => {
   }
 
   useEffect(() => {
-    if (res) setRole(res.role);
+    if (res) {
+      console.log(res);
+      setRole(res.role);
+      // if user is not varified
+      if (!res.varified) {
+        setNotification([
+          {
+            name: "verification",
+            message: "Please verify your email by entering your OTP.",
+          },
+        ]);
+      }
+    }
   }, [res]);
 
   const AllInMobile = [
@@ -146,17 +294,43 @@ const Navbar = ({ filter = true }) => {
   ];
 
   const All = [
-    { heading: "Trending", option: [{ name: "Bestsellers", path: "/" }, { name: "New Releases", path: "/" }, { name: "Movers and Shakers", path: "/" }] },
-    { heading: "Digital Content and Devices", option: [{ name: "Smartphones", path: "/" }] },
-    { heading: "Programs & Features", option: [{ name: "Gift Cards & Mobile Recharges", path: "/" }, { name: "Neo Business", path: "/" }] },
-    { heading: "Help & Settings", option: [{ name: " Your Account ", path: "/profile" }, { name: "Customer Service", path: "/service" }, { name: authStatus ? "Sign out" : "Sign in", path: authStatus ? "/" : "/auth" }] },
+    {
+      heading: "Trending",
+      option: [
+        { name: "Bestsellers", path: "/" },
+        { name: "New Releases", path: "/" },
+        { name: "Movers and Shakers", path: "/" },
+      ],
+    },
+    {
+      heading: "Digital Content and Devices",
+      option: [{ name: "Smartphones", path: "/" }],
+    },
+    {
+      heading: "Programs & Features",
+      option: [
+        { name: "Gift Cards & Mobile Recharges", path: "/" },
+        { name: "Neo Business", path: "/" },
+      ],
+    },
+    {
+      heading: "Help & Settings",
+      option: [
+        { name: " Your Account ", path: "/profile" },
+        { name: "Customer Service", path: "/service" },
+        {
+          name: authStatus ? "Sign out" : "Sign in",
+          path: authStatus ? "/" : "/auth",
+        },
+      ],
+    },
   ];
 
   const filterOptions = [
     { name: "All", path: "/" },
     { name: "Fresh", path: "/" },
     { name: "Today's Deals", path: "/" },
-    { name: "Sell", path: (role == "seller" ? "/deskboard" : "/request") },
+    { name: "Sell", path: role == "seller" ? "/deskboard" : "/request" },
     { name: "Buy Again", path: "/" },
     { name: "Gift Card", path: "/" },
     { name: "History", path: "/" },
@@ -164,49 +338,94 @@ const Navbar = ({ filter = true }) => {
 
   return (
     <header className="w-full bg-white z-100">
-      <SignOutModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onConfirm={handleLogout} />
-      
+      <SignOutModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleLogout}
+      />
+
       {/* Verification Popup */}
-      {popup && <VarifyPopUp onClose={() => setPopup(false)} email={user?.email} />}
+      {popup && (
+        <VarifyPopUp onClose={() => setPopup(false)} email={user?.email} />
+      )}
 
       {/* Navbar */}
       <nav className="h-16 md:h-20 px-4 md:px-8 flex items-center justify-between border-b border-slate-50 fixed top-0 w-full bg-white">
         <div className="flex-1 md:hidden">
-          <div onClick={() => setAll(true)} className="cursor-pointer p-2 w-fit">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" viewBox="0 0 24 24" fill="black">
+          <div onClick={() => setAll(true)} className="cursor-pointer w-fit">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              viewBox="0 0 24 24"
+              fill="rgb(21, 93, 252)"
+            >
               <path d="M3 4H21V6H3V4ZM3 11H21V13H3V11ZM3 18H21V20H3V18Z"></path>
             </svg>
           </div>
         </div>
 
-        <div className="flex flex-1 justify-center md:justify-start md:flex-none">
-          <Link to={"/"} className="flex items-center gap-2">
-            <div className=" logo w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black shadow-lg shadow-blue-200">Neo</div>
-            <span className="text-xl font-bold tracking-tight text-blue-600 hidden md:block">ecommerce</span>
-          </Link>
+        {/* logo */}
+        <Logo />
+        {/* search for desktop */}
+        <div className="hidden md:flex grow justify-center px-10">
+          <Search />
         </div>
 
-        <div className="hidden md:flex grow justify-center px-10"><Search /></div>
-
         <div className="flex flex-1 justify-end items-center gap-2 md:gap-5">
-          {/* Notification Trigger */}
-          <div className="notification text-black relative cursor-pointer" onClick={() => setShowNoti(true)}>
-            <div className="bg-red-200 text-blue-500 font-bold absolute items-center flex justify-center rounded-2xl right-2 -top-2 px-1 py-.5">
-              {notifications.length}
+          {/* Notification (if user is logged in) */}
+          {user && (
+            <div
+              className="notification p-2 rounded-full text-black relative cursor-pointer hover:bg-gray-100"
+              onClick={() => setShowNoti(true)}
+            >
+              <div className="font-bold absolute items-center flex justify-center px-1 py-.5 top-1 right-4 bg-red-500 text-white text-xs rounded-full">
+                {/* it will visible if minimum 1 notification is persent */}
+                {notifications.length > 0 && notifications.length}
+              </div>
+              <svg
+                width={30}
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="rgb(21, 93, 252)"
+              >
+                <path d="M20 17H22V19H2V17H4V10C4 5.58172 7.58172 2 12 2C16.4183 2 20 5.58172 20 10V17ZM18 17V10C18 6.68629 15.3137 4 12 4C8.68629 4 6 6.68629 6 10V17H18ZM9 21H15V23H9V21Z"></path>
+              </svg>
             </div>
-            <svg width={30} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(0,74,212,1)">
-              <path d="M20 17H22V19H2V17H4V10C4 5.58172 7.58172 2 12 2C16.4183 2 20 5.58172 20 10V17ZM18 17V10C18 6.68629 15.3137 4 12 4C8.68629 4 6 6.68629 6 10V17H18ZM9 21H15V23H9V21Z"></path>
-            </svg>
-          </div>
+          )}
 
           {/* Role Based Icons */}
-          <Link to={authStatus ? (role == "seller" ? "/deskboard" : "/cart") : "/auth"} className="p-2 hover:bg-blue-50 rounded-xl transition-all">
-            <svg width="30" viewBox="0 0 24 24" fill="rgba(0,74,212,1)">
-              <path d="M4.00436 6.41686L0.761719 3.17422L2.17593 1.76001L5.41857 5.00265H20.6603C21.2126 5.00265 21.6603 5.45037 21.6603 6.00265C21.6603 6.09997 21.6461 6.19678 21.6182 6.29L19.2182 14.29C19.0913 14.713 18.7019 15.0027 18.2603 15.0027H6.00436V17.0027H17.0044V19.0027H5.00436C4.45207 19.0027 4.00436 18.5549 4.00436 18.0027V6.41686ZM5.50436 23.0027C4.67593 23.0027 4.00436 22.3311 4.00436 21.5027C4.00436 20.6742 4.67593 20.0027 5.50436 20.0027C6.33279 20.0027 7.00436 20.6742 7.00436 21.5027C7.00436 22.3311 6.33279 23.0027 5.50436 23.0027ZM17.5044 23.0027C16.6759 23.0027 16.0044 22.3311 16.0044 21.5027C16.0044 20.6742 16.6759 20.0027 17.5044 20.0027C18.3328 20.0027 19.0044 20.6742 19.0044 21.5027C19.0044 22.3311 18.3328 23.0027 17.5044 23.0027Z"></path>
-            </svg>
+          <Link
+            to={
+              authStatus ? (role == "seller" ? "/deskboard" : "/cart") : "/auth"
+            }
+            className="p-2 hover:bg-blue-50 rounded-xl transition-all"
+          >
+            {role == "seller" ? (
+              <svg
+                width={30}
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="rgb(21, 93, 252)"
+              >
+                <path d="M22 20V22H2V20H3V13.2422C1.79401 12.435 1 11.0602 1 9.5C1 8.67286 1.22443 7.87621 1.63322 7.19746L4.3453 2.5C4.52393 2.1906 4.85406 2 5.21132 2H18.7887C19.1459 2 19.4761 2.1906 19.6547 2.5L22.3575 7.18172C22.7756 7.87621 23 8.67286 23 9.5C23 11.0602 22.206 12.435 21 13.2422V20H22ZM5.78865 4L3.35598 8.21321C3.12409 8.59843 3 9.0389 3 9.5C3 10.8807 4.11929 12 5.5 12C6.53096 12 7.44467 11.3703 7.82179 10.4295C8.1574 9.59223 9.3426 9.59223 9.67821 10.4295C10.0553 11.3703 10.969 12 12 12C13.031 12 13.9447 11.3703 14.3218 10.4295C14.6574 9.59223 15.8426 9.59223 16.1782 10.4295C16.5553 11.3703 17.469 12 18.5 12C19.8807 12 21 10.8807 21 9.5C21 9.0389 20.8759 8.59843 20.6347 8.19746L18.2113 4H5.78865Z"></path>
+              </svg>
+            ) : (
+              <svg
+                width="30"
+                viewBox="0 0 24 24"
+                fill="rgb(21, 93, 252)"
+                className="hidden md:block"
+              >
+                <path d="M4.00436 6.41686L0.761719 3.17422L2.17593 1.76001L5.41857 5.00265H20.6603C21.2126 5.00265 21.6603 5.45037 21.6603 6.00265C21.6603 6.09997 21.6461 6.19678 21.6182 6.29L19.2182 14.29C19.0913 14.713 18.7019 15.0027 18.2603 15.0027H6.00436V17.0027H17.0044V19.0027H5.00436C4.45207 19.0027 4.00436 18.5549 4.00436 18.0027V6.41686ZM5.50436 23.0027C4.67593 23.0027 4.00436 22.3311 4.00436 21.5027C4.00436 20.6742 4.67593 20.0027 5.50436 20.0027C6.33279 20.0027 7.00436 20.6742 7.00436 21.5027C7.00436 22.3311 6.33279 23.0027 5.50436 23.0027ZM17.5044 23.0027C16.6759 23.0027 16.0044 22.3311 16.0044 21.5027C16.0044 20.6742 16.6759 20.0027 17.5044 20.0027C18.3328 20.0027 19.0044 20.6742 19.0044 21.5027C19.0044 22.3311 18.3328 23.0027 17.5044 23.0027Z"></path>
+              </svg>
+            )}
           </Link>
-          <Link to={authStatus ? "/profile" : "/auth"} className="md:block hidden">
-            <svg width="30" viewBox="0 0 24 24" fill="rgba(0,74,212,1)">
+
+          <Link
+            to={authStatus ? "/profile" : "/auth"}
+            className="md:block hidden"
+          >
+            <svg width="36" viewBox="0 0 24 24" fill="rgb(21, 93, 252)">
               <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 8C12.5523 8 13 8.44772 13 9C13 9.55228 12.5523 10 12 10C11.4477 10 11 9.55228 11 9C11 8.44772 11.4477 8 12 8ZM12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12ZM12 15C13.1046 15 14 15.8954 14 17H16C16 14.7909 14.2091 13 12 13C9.79086 13 8 14.7909 8 17H10C10 15.8954 10.8954 15 12 15Z"></path>
             </svg>
           </Link>
@@ -220,11 +439,24 @@ const Navbar = ({ filter = true }) => {
 
       {/* Filters Bar */}
       {filter && (
-        <div className="hidden w-full justify-around md:flex bg-slate-50/80 border-b border-slate-100 h-11 items-center px-4 overflow-x-auto no-scrollbar whitespace-nowrap gap-6 text-sm font-semibold text-slate-500 mten mt-20">
+        <div className="hidden w-full justify-around md:flex bg-white border-b-2 border-gray-600 h-11 items-center px-4 overflow-x-auto no-scrollbar whitespace-nowrap gap-6 text-sm font-semibold text-slate-500 mten mt-20">
           {filterOptions.map((el, i) => (
             <Link to={el.path} key={i}>
-              <div onClick={i === 0 ? () => setAll(true) : null} className={`flex items-center cursor-pointer hover:text-blue-600 transition-colors relative ${i === 0 ? "text-blue-600" : ""}`}>
-                {i === 0 && <svg className="mr-1" height={20} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4H21V6H3V4ZM3 11H21V13H3V11ZM3 18H21V20H3V18Z"></path></svg>}
+              <div
+                onClick={i === 0 ? () => setAll(true) : null}
+                className={`flex items-center cursor-pointer hover:text-blue-600 transition-colors relative ${i === 0 ? "text-blue-600" : ""}`}
+              >
+                {i === 0 && (
+                  <svg
+                    className="mr-1"
+                    height={20}
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M3 4H21V6H3V4ZM3 11H21V13H3V11ZM3 18H21V20H3V18Z"></path>
+                  </svg>
+                )}
                 {el.name}
               </div>
             </Link>
@@ -235,23 +467,40 @@ const Navbar = ({ filter = true }) => {
       {/* Right Sidebar (Notifications) */}
       {showNoti && (
         <div className="fixed inset-0 z-250 flex justify-end">
-          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setShowNoti(false)}></div>
+          <div
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+            onClick={() => setShowNoti(false)}
+          ></div>
           <div className="relative w-full max-w-75 bg-white h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
             <div className="bg-blue-600 p-6 text-white flex justify-between items-center">
               <p className="font-bold text-lg">Notifications</p>
-              <div onClick={() => setShowNoti(false)} className="cursor-pointer text-xl">✕</div>
+              <div
+                onClick={() => setShowNoti(false)}
+                className="cursor-pointer text-xl"
+              >
+                ✕
+              </div>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {notifications.map((n, i) => (
-                <div 
-                  key={i} 
-                  onClick={() => { setShowNoti(false); setPopup(true); }}
-                  className="p-4 border border-gray-100 rounded-xl hover:bg-slate-50 cursor-pointer transition-all"
-                >
-                  <p className="font-bold text-blue-600 text-sm">{n.name === "verification" ? "Verify Email" : n.name}</p>
-                  <p className="text-slate-600 text-xs mt-1">{n.message}</p>
-                </div>
-              ))}
+              {notifications.length > 0 ? (
+                notifications.map((n, i) => (
+                  <div
+                    key={i}
+                    onClick={() => {
+                      setShowNoti(false);
+                      setPopup(true);
+                    }}
+                    className="p-4 border border-gray-100 rounded-xl hover:bg-slate-50 cursor-pointer transition-all"
+                  >
+                    <p className="font-bold text-blue-600 text-sm">
+                      {n.name === "verification" ? "Verify Email" : n.name}
+                    </p>
+                    <p className="text-slate-600 text-xs mt-1">{n.message}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-black">No any notification</p>
+              )}
             </div>
           </div>
         </div>
@@ -260,26 +509,44 @@ const Navbar = ({ filter = true }) => {
       {/* Left Sidebar (Menu) */}
       {all && (
         <div className="fixed inset-0 z-200 flex">
-          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setAll(false)}></div>
+          <div
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+            onClick={() => setAll(false)}
+          ></div>
           <div className="relative w-full max-w-75 bg-white h-full shadow-2xl flex flex-col animate-in slide-in-from-left duration-300 overflow-hidden">
             <div className="bg-blue-600 p-6 text-white shrink-0">
               <div className="flex justify-between items-center mb-4">
-                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center font-bold">Hi</div>
-                <div onClick={() => setAll(false)} className="cursor-pointer text-2xl font-bold">✕</div>
+                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center font-bold">
+                  Hi
+                </div>
+                <div
+                  onClick={() => setAll(false)}
+                  className="cursor-pointer text-2xl font-bold"
+                >
+                  ✕
+                </div>
               </div>
-              <p className="font-bold text-lg">Hello, {user ? user.name : "Welcome"}</p>
+              <p className="font-bold text-lg">
+                Hello, {user ? user.name : "Welcome"}
+              </p>
             </div>
             <div className="flex-1 overflow-y-auto p-6 space-y-8 no-scrollbar">
               {All.map((section, i) => (
                 <div key={i} className="space-y-4">
-                  <p className="text-[10px] uppercase font-black text-slate-400 tracking-widest">{section.heading}</p>
+                  <p className="text-[10px] uppercase font-black text-slate-400 tracking-widest">
+                    {section.heading}
+                  </p>
                   <div className="space-y-3">
                     {section.option.map((opt, j) => (
-                      <Link 
-                        key={j} 
-                        to={opt.path} 
+                      <Link
+                        key={j}
+                        to={opt.path}
                         className={`flex justify-between items-center font-bold text-sm ${opt.name === "Sign out" ? "text-red-600" : "text-slate-700"}`}
-                        onClick={opt.name === "Sign out" ? triggerSignOutSideBar : () => setAll(false)}
+                        onClick={
+                          opt.name === "Sign out"
+                            ? triggerSignOutSideBar
+                            : () => setAll(false)
+                        }
                       >
                         {opt.name}
                       </Link>
@@ -294,5 +561,4 @@ const Navbar = ({ filter = true }) => {
     </header>
   );
 };
-
 export default Navbar;

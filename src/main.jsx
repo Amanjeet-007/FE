@@ -5,6 +5,10 @@ import { RouterProvider } from "react-router-dom";
 import { store } from './redux/store.js';
 import { Provider } from 'react-redux'
 import { App } from './App.jsx'
+import { registerSW } from 'virtual:pwa-register';
+
+registerSW();
+
 
 
 

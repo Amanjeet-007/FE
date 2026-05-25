@@ -365,38 +365,6 @@ section{
     margin: 10px 35px;
 }
 
-table {
-    height: 100%;
-}
-
-tr {
-    height: 50%;
-    width: 100%;
-}
-
-td {
-    margin: 5px;
-    width: 45%;
-    height: 50%;
-    border: 2px solid white;
-    border-radius: 10px;
-    position: relative;
-    color: white;
-    overflow: hidden;
-    transition: .3s;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    border: 2px solid white;
-    background-color: white;
-    cursor: pointer;
-}
-
-td:hover {
-    scale: 1.03;
-    box-shadow: 0px 3px 4px rgba(128, 128, 128, 0.795);
-}
-
 .offerTag {
     background-color: #1e3b8ab7;
     position: absolute;
@@ -506,7 +474,10 @@ td:hover {
 
 .group {
     cursor: pointer;
-    min-width: 180px;
+    min-width: 100px;
+}
+.cat .group{
+    margin-top:15px ;
 }
 
 .badge {
@@ -554,12 +525,12 @@ td:hover {
 
 /* footer */
 footer {
-    padding: 50px 20px;
+    padding:20px;
 }
 
 footer div {
     /* margin: auto; */
-    padding: 5px 100px;
+    padding: 5px 30px;
 }
 
 h3 {

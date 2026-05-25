@@ -3,11 +3,17 @@ import { Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser, signup } from "../Api/auth";
 import { authenticated } from "../redux/features/auth";
-import { setUser } from "../redux/features/user";
+// import { setUser } from "../redux/features/user";
+import { useNavigate } from "react-router-dom";
 import useSession from "../hooks/useSession.js";
+import Loader from "../components/common/Loader.jsx";
+import ErrorMessage from "../components/common/ErrorMessage.jsx";
+
+
 
 const Login = () => {
   const { saveSession } = useSession();
+  const navigate = useNavigate();
 
   const [inputData, setInputData] = useState({
     email: "",
@@ -30,11 +36,15 @@ const Login = () => {
 
     // server request and other thing with error handling
     try {
-      const res = await loginUser(inputData);
-      dispactch(authenticated());
-      saveSession(res.data.user);
-      dispactch(setUser(res.data.user));
-      // console.log("Login successful.",res)
+      if (inputData.email && inputData.password) {
+        const res = await loginUser(inputData);
+        dispactch(authenticated());
+        saveSession(res.data.user);
+        //navigate the page into home page
+        navigate("/");
+        // console.log("Login successful.",res)
+      }
+      setError("fill the blank field");
     } catch (err) {
       setError(err?.message || err);
       console.log("while login getting error", err);
@@ -45,40 +55,43 @@ const Login = () => {
 
   // login
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="text-center md:text-left">
-        <h2 className="text-4xl font-extrabold text-blue-900 tracking-tight">
-          Welcome Back
-        </h2>
-        <p className="text-blue-600/60 mt-2 font-medium">
-          Log in to your premium shopping account.
-        </p>
+    <Loader type="blur" text="Finding" loading={loading}>
+      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="text-center md:text-left">
+          <h2 className="text-4xl font-extrabold text-blue-900 tracking-tight">
+            Welcome Back
+          </h2>
+          <p className="text-blue-600/60 mt-2 font-medium">
+            Log in to your premium shopping account.
+          </p>
+        </div>
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <div className="group">
+            <input
+              onChange={handleChange}
+              name="email"
+              type="email"
+              className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300"
+              placeholder="Email Address"
+            />
+          </div>
+          <div className="group">
+            <input
+              onChange={handleChange}
+              name="password"
+              type="password"
+              className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300"
+              placeholder="Password"
+            />
+          </div>
+          {error && <ErrorMessage message={error}/>
+          }
+          <button className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 active:scale-[0.98] transition-all shadow-xl shadow-blue-200">
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
+        </form>
       </div>
-      <form className="space-y-4" onSubmit={handleSubmit}>
-        <div className="group">
-          <input
-            onChange={handleChange}
-            name="email"
-            type="email"
-            className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300"
-            placeholder="Email Address"
-          />
-        </div>
-        <div className="group">
-          <input
-            onChange={handleChange}
-            name="password"
-            type="password"
-            className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300"
-            placeholder="Password"
-          />
-        </div>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        <button className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 active:scale-[0.98] transition-all shadow-xl shadow-blue-200">
-          {loading ? "Signing in..." : "Sign In"}
-        </button>
-      </form>
-    </div>
+    </Loader>
   );
 };
 
@@ -88,6 +101,7 @@ const Signup = () => {
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
   const { saveSession } = useSession();
 
   function handleChange(e) {
@@ -97,76 +111,81 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const dispactch = useDispatch();
+
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const res = await signup(form);
-      dispactch(authenticated());
-      saveSession(res.data.user);
-      dispactch(setUser(res.data.user));
+      if (form.name && form.email && form.password) {
+        const res = await signup(form);
+        dispactch(authenticated());
+        saveSession(res.data.user);
+        navigate("/");
+      }
+      setError("Please fill all field!");
+      //navigate the user to home page
     } catch (err) {
-      setError(err.err.errors.name.message)
-      return console.log("signup error", err.err.errors.name.message);
+      setError(err.message ?? "Network error!");
+      return console.log("signup error", err.message);
     } finally {
       setLoading(false);
     }
   }
 
-  // singup api
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="text-center md:text-left">
-        <h2 className="text-4xl font-extrabold text-blue-900 tracking-tight">
-          Create Account
-        </h2>
-        <p className="text-blue-600/60 mt-2 font-medium">
-          Join us for exclusive deals and faster checkout.
-        </p>
+    <Loader type="blur" text="Creating..." loading={loading}>
+      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="text-center md:text-left">
+          <h2 className="text-4xl font-extrabold text-blue-900 tracking-tight">
+            Create Account
+          </h2>
+          <p className="text-blue-600/60 mt-2 font-medium">
+            Join us for exclusive deals and faster checkout.
+          </p>
+        </div>
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            onChange={handleChange}
+            className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300"
+            name="name"
+            placeholder="Full Name"
+          />
+          <input
+            type="email"
+            onChange={handleChange}
+            name="email"
+            className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300"
+            placeholder="Email Address"
+          />
+          <input
+            type="password"
+            onChange={handleChange}
+            name="password"
+            className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300"
+            placeholder="Password"
+          />
+          {error && 
+          <ErrorMessage message={error}/>
+          }
+          <button className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 active:scale-[0.98] transition-all shadow-xl shadow-blue-200">
+            Join Now
+          </button>
+        </form>
       </div>
-      <form className="space-y-4" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          onChange={handleChange}
-          className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300"
-          name="name"
-          placeholder="Full Name"
-        />
-        <input
-          type="email"
-          onChange={handleChange}
-          name="email"
-          className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300"
-          placeholder="Email Address"
-        />
-        <input
-          type="password"
-          onChange={handleChange}
-          name="password"
-          className="w-full px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-blue-300"
-          placeholder="Password"
-        />
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        <button className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 active:scale-[0.98] transition-all shadow-xl shadow-blue-200">
-          {loading ? "Signing in..." : "Join Now"}
-        </button>
-      </form>
-    </div>
+    </Loader>
   );
 };
 
 export default function Auth() {
   const [signup, setSignup] = useState(false);
 
-  //redux se puchhna higa ki authenticated user hai ki nahi
+  //localstorage se puchhna hoga ki authenticated user hai ki nahi
   const { getSession } = useSession();
 
   const user = getSession();
-
-  if (user) {
-    return <Navigate to="/" replace />;
-  }
+  if (user) return <Navigate to="/" replace />;
 
   return (
     <div className="min-h-screen bg-blue-50 flex items-center justify-center p-4">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Heart, ArrowLeft, ShoppingBag } from 'lucide-react';
 import Navbar from "../components/layout/Navbar";
 import BottomMenu from "../components/layout/BottomMenu";

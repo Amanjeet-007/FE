@@ -211,7 +211,13 @@ const ProductCard = ({ product , refresh }) => {
         {/* Category Badge */}
         <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-blue-900 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider shadow-sm">
           {product.category}
+        </span> 
+
+        {/* ### more statistics clicks etc */}
+        <span className="absolute top-3 right-3">
+          <svg width={25} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,255,225)"><path d="M12 3C11.175 3 10.5 3.675 10.5 4.5C10.5 5.325 11.175 6 12 6C12.825 6 13.5 5.325 13.5 4.5C13.5 3.675 12.825 3 12 3ZM12 18C11.175 18 10.5 18.675 10.5 19.5C10.5 20.325 11.175 21 12 21C12.825 21 13.5 20.325 13.5 19.5C13.5 18.675 12.825 18 12 18ZM12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z"></path></svg>
         </span>
+
       </div>
 
       {/* Content Section */}
@@ -326,6 +332,7 @@ function Products() {
 export default function Deskboard() {
   const [create_one, setCreate_one] = useState(false);
   const [viewState, setViewState] = useState(false);
+  const [loading,setLoading] = useState(false);
 
   // Form State matching your Mongoose Schema
   const [formData, setFormData] = useState({
@@ -366,7 +373,7 @@ export default function Deskboard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     const data = new FormData();
 
     // text fields
@@ -387,7 +394,9 @@ export default function Deskboard() {
 
     try {
       await createProduct(data); // ✅ SEND FormData
+      setLoading(false)
       setCreate_one(false);
+      
     } catch (error) {
       console.error("Upload failed", error);
     }
@@ -417,6 +426,7 @@ export default function Deskboard() {
           </div>
           <div className="flex flex-wrap gap-3">
             <button
+            style ={viewState ? {backgroundColor:"white",color:"gray"}:{backgroundColor:"#0052ff",color:"white"}}
               onClick={() => setCreate_one(true)}
               className="px-6 py-2.5 rounded-2xl bg-[#0052ff] text-white font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 hover:-translate-y-0.5 transition-all active:scale-95"
             >
@@ -424,10 +434,12 @@ export default function Deskboard() {
             </button>
             <button
               to="/my product"
+              style={viewState?{backgroundColor:"#0052ff", color:"white"}:{backgroundColor:"white"}}
               className="px-6 py-2.5 rounded-2xl border-2 border-slate-200 bg-white text-slate-700 font-bold hover:bg-slate-50 transition-all text-center"
               onClick={() => setViewState((e) => !e)}
             >
-              {viewState ? "View Products" : "View State"}
+              {viewState ? 
+              "View Products" : "View State"}
             </button>
           </div>
         </div>
@@ -607,7 +619,11 @@ export default function Deskboard() {
                       type="submit"
                       className="flex-1 px-6 py-3 rounded-2xl bg-[#0052ff] text-white font-bold shadow-lg shadow-blue-200"
                     >
-                      Publish Product
+                      {
+                        loading?
+                        "loading....":
+                        "Publish Product"
+                      }
                     </button>
                   </div>
                 </form>
