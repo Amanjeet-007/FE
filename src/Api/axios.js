@@ -1,11 +1,9 @@
 //* eslint-disable no-undef */
 import axios from "axios";
 
-
-
 const api = axios.create({
-  baseURL: import.meta.env.VITE_Backend_ENDPOINT || "http://localhost:5000/api",
-  withCredentials: true, // important if using cookies/JWT
+  baseURL: `${import.meta.env.VITE_Backend_ENDPOINT}` ,
+  withCredentials: true, // important if using cookies/JWT || "http://localhost:5000/api"
   headers: {
     "Content-Type": "application/json",
   },
@@ -15,6 +13,7 @@ const api = axios.create({
 api.interceptors.response.use(
   (res) => res,
   (err) => {
+    console.log(err)
     return Promise.reject(err.response?.data || err.message);
   }
 );

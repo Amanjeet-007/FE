@@ -127,7 +127,7 @@ const Signup = () => {
       //navigate the user to home page
     } catch (err) {
       setError(err.message ?? "Network error!");
-      return console.log("signup error", err.message);
+      return console.log("signup error", err);
     } finally {
       setLoading(false);
     }
