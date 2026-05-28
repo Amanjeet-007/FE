@@ -1,7 +1,7 @@
 import api from "./axios";
 // get all product to list 
 export const allProducts = async () => {
-    const res = await api.get('/products')
+    const res = await api.get('/api/products')
     return res.data
 };
 export const productDetails = async (id) => {
