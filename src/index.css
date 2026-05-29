@@ -474,7 +474,8 @@ section{
 
 .group {
     cursor: pointer;
-    min-width: 100px;
+    min-width: 190px;
+    min-height: min-content;
 }
 .cat .group{
     margin-top:15px ;

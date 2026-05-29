@@ -219,13 +219,11 @@ export default function Auth() {
 
   // Effect to handle the redirection logic
   if (blocker.state === "blocked") {
-    // 1. Run your custom logic here
-    console.log("Custom logic executed on back swipe/button");
 
-    // 2. Clear the blocker so the next navigation works
+    // Clear the blocker so the next navigation works
     blocker.reset();
 
-    // 3. Navigate to your specific route
+    // Navigate to your specific route
     navigate("/");
   }
 
