@@ -208,8 +208,8 @@ export default function Home() {
       </section>
 
       {/* Categories Section */}
-      <section className="py-16 bg-blue-900/5 relative ">
-        <div className="w-full flex mx-auto px-4 md:px-10 flex-col delay-150 overflow-hidden" style={seeAll?{height:"450px"}:{height:"350px"}}>
+      <section className="py-16 bg-blue-900/5 relative flex ">
+        <div className="w-full flex mx-auto px-4 md:px-10 flex-col delay-150 overflow-hidden" style={seeAll?{height:"450px",overflowY:"scroll"}:{height:"350px"}}>
           <div className="flex justify-between items-end mb-10">
             <div className="w-full">
               <h2 className="md:text-3xl text-2xl font-black text-blue-900 ">
@@ -240,7 +240,7 @@ export default function Home() {
             {categories.map((el, i) => (
               <div
                 key={i}
-                className="flex flex-col items-center group cursor-pointer"
+                className="flex flex-col items-center m-7 cursor-pointer"
               >
                 <div className="relative md:w-28 md:h-28 w-15 h-15 mb-4">
                   <div className="absolute inset-0 bg-blue-600 rounded-full scale-0 group-hover:scale-110 transition-transform duration-300 opacity-20"></div>
