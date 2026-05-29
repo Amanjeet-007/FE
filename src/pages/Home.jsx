@@ -42,6 +42,17 @@ const categories = [
     path: "/",
     img: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?q=80&w=2038",
   },
+   {
+    name: "Grosery",
+    path: "/",
+    img: "https://img-cdn.misfitsmarket.com/melodious-taiyaki-9pkr2z/aH6BNUMqNJQqILDE_20240730_Assortment_4_Fill.jpg",
+  },
+  {
+    name: "Cake",
+    path: "/",
+    img: "https://whipped.in/cdn/shop/files/WhatsAppImage2023-12-12at11.29.28PM_1080x.jpg?v=1748459537",
+  },
+  
 ];
 
 function SaleGrid() {
@@ -97,6 +108,7 @@ function SaleGrid() {
 export default function Home() {
   const [index, setIndex] = useState(0);
   const [Products, setProducts] = useState([]);
+  const [seeAll , setSeeAll] = useState(false);
 
   useEffect(() => {
     async function getProduct() {
@@ -197,7 +209,7 @@ export default function Home() {
 
       {/* Categories Section */}
       <section className="py-16 bg-blue-900/5 relative ">
-        <div className="w-full flex mx-auto px-4 md:px-10 flex-col">
+        <div className="w-full flex mx-auto px-4 md:px-10 flex-col delay-150 overflow-hidden" style={seeAll?{height:"450px"}:{height:"350px"}}>
           <div className="flex justify-between items-end mb-10">
             <div className="w-full">
               <h2 className="md:text-3xl text-2xl font-black text-blue-900 ">
@@ -207,10 +219,11 @@ export default function Home() {
                 Curated collections just for you
               </p>
             </div>
-            <button className="text-blue-600 font-bold hover:underline underline-offset-8 absolute md:relative bottom-1 left-[32%] -translate-0.5  md:bottom-0 md:left-0 ">
+            <button className="text-blue-600 bg-blue-900/5 -ml-4 w-full z-50 p-2 md:bg-transparent font-bold hover:underline underline-offset-8 absolute md:relative bottom-1  md:bottom-0 md:left-0 " onClick={()=>{setSeeAll(el=>!el)}}>
               View All Categories
               <br />
-              <span className="md:hidden w-full flex items-center justify-center">
+              
+              <span className="md:hidden w-full flex items-center justify-center" style={seeAll?{rotate:"180deg"}:{rotate:"0deg"}}>
                 <svg
                   width={30}
                   xmlns="http://www.w3.org/2000/svg"
