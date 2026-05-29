@@ -1,38 +1,58 @@
-import { useState } from 'react';
-import { Heart, ArrowLeft, ShoppingBag } from 'lucide-react';
+/* eslint-disable react-hooks/exhaustive-deps */
+// import { useState } from 'react';
+// import { Heart, ArrowLeft, ShoppingBag } from 'lucide-react';
 import Navbar from "../components/layout/Navbar";
 import BottomMenu from "../components/layout/BottomMenu";
 import Footer from "../components/layout/Footer";
-import ProductCard from '../components/product/ProductCard';
+import useSession from "../hooks/useSession";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+// import ProductCard from '../components/product/ProductCard';
 
 export default function Wishlist() {
+  const { getSession } = useSession();
+  const user = getSession();
+  const navigate = useNavigate();
   // Mock data - in a real app, this would come from a Global State (Redux/Context)
-  const [likedProducts, setLikedProducts] = useState([
-    {
-      id: 1,
-      name: "Premium Wireless Headphones",
-      price: 299.99,
-      rating: 4.8,
-      reviews: 124,
-      image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500",
-      badge: "Sale"
-    },
-    {
-      id: 2,
-      name: "Minimalist Leather Watch",
-      price: 150.00,
-      rating: 4.5,
-      reviews: 89,
-      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500",
+  // const [likedProducts, setLikedProducts] = useState([
+  //   {
+  //     id: 1,
+  //     name: "Premium Wireless Headphones",
+  //     price: 299.99,
+  //     rating: 4.8,
+  //     reviews: 124,
+  //     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500",
+  //     badge: "Sale"
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Minimalist Leather Watch",
+  //     price: 150.00,
+  //     rating: 4.5,
+  //     reviews: 89,
+  //     image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500",
+  //   }
+  // ]);
+  useEffect(()=>{
+    if(!user){
+      navigate("/auth")
     }
-  ]);
+  },[])
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar filter={false} />
+      <main> Welcome to wishlist</main>
+      <div className="hidden md:block">
+        <Footer />
+      </div>
+      <BottomMenu />
+    </div>
+  );
+}
+/*
+ <main className="flexgrow container mx-auto px-4 py-6 mb-20 md:mb-10 mten">
 
-      <main className="flexgrow container mx-auto px-4 py-6 mb-20 md:mb-10 mten">
-        {/* Header Section */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <button className="p-2 md:hidden hover:bg-gray-100 rounded-full">
@@ -54,14 +74,14 @@ export default function Wishlist() {
         </div>
 
         {likedProducts.length > 0 ? (
-          /* Responsive Grid: 2 columns on mobile, 3 on tablet, 4 on desktop */
+  
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">
             {likedProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         ) : (
-          /* Empty State */
+
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
               <Heart size={40} className="text-gray-300" />
@@ -77,11 +97,4 @@ export default function Wishlist() {
           </div>
         )}
       </main>
-
-      <div className="hidden md:block">
-        <Footer />
-      </div>
-      <BottomMenu />
-    </div>
-  );
-}
+ */

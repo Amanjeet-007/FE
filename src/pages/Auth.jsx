@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { loginUser, signup } from "../Api/auth";
 import { authenticated } from "../redux/features/auth";
 // import { setUser } from "../redux/features/user";
-import { useNavigate } from "react-router-dom";
+import { useNavigate , useBlocker } from "react-router-dom";
 import useSession from "../hooks/useSession.js";
 import Loader from "../components/common/Loader.jsx";
 import ErrorMessage from "../components/common/ErrorMessage.jsx";
@@ -180,9 +180,29 @@ const Signup = () => {
 
 export default function Auth() {
   const [signup, setSignup] = useState(false);
+  const navigate = useNavigate();
+
+  // The blocker will trigger whenever navigation is attempted
+  const blocker = useBlocker(({ historyAction }) => {
+    // Only block if the user is going "back" (POP action)
+    return historyAction === 'POP';
+  });
+
+  // Effect to handle the redirection logic
+  if (blocker.state === 'blocked') {
+    // 1. Run your custom logic here
+    console.log("Custom logic executed on back swipe/button");
+
+    // 2. Clear the blocker so the next navigation works
+    blocker.reset();
+
+    // 3. Navigate to your specific route
+    navigate('/');
+  }
 
   //localstorage se puchhna hoga ki authenticated user hai ki nahi
   const { getSession } = useSession();
+
 
   const user = getSession();
   if (user) return <Navigate to="/" replace />;

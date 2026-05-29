@@ -6,6 +6,10 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    host: true, // Listen on all local IP addresses
+    port: 5173, // Optional: specify a fixed port
+  },
   plugins: [
     tailwindcss(),
     react(),

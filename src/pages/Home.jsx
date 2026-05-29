@@ -114,7 +114,7 @@ export default function Home() {
       <section style={{marginTop:"10px"}} className="max-w-360 mx-auto px-0 md:px-10 h-min py-4 overflow-hidden mt-0">
         <div className="flex flex-col md:flex-row gap-6 h-auto md:h-[65vh]">
           {/* Left: On Sale Grid */}
-          <div className="w-full md:w-1/3 flex flex-col">
+          <div className="w-[90%] m-auto h-full md:w-1/3 flex flex-col">
             <h2 className="text-2xl font-black text-blue-900 mb-4 flex items-center gap-2">
               <span className="w-8 h-1 bg-blue-600 rounded-full"></span> On Sale
             </h2>
@@ -122,7 +122,7 @@ export default function Home() {
           </div>
 
           {/* Middle: Main Ads Banner */}
-          <div className="w-full md:w-1/3 relative h-[50vh] md:h-full rounded-[2.5rem] overflow-hidden shadow-2xl group">
+          <div className="w-[90%] m-auto md:w-1/3 relative h-[50vh] md:h-full rounded-[2.5rem] overflow-hidden shadow-2xl group">
             {Ads.map((el, i) => (
               <div
                 key={i}
@@ -150,7 +150,7 @@ export default function Home() {
           </div>
 
           {/* Right: Map/Explore */}
-          <div className="w-full md:w-1/3 h-[40vh] md:h-full relative  rounded-[2.5rem] overflow-hidden shadow-xl border-4 border-white">
+          <div className="w-[90%] m-auto md:w-1/3 h-[40vh] md:h-full relative  rounded-[2.5rem] overflow-hidden shadow-xl border-4 border-white">
             <iframe
               className="absolute inset-0 w-full h-full grayscale opacity-50"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1!2d0!3d0!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTPCsDAwJzAwLjAiTiAwwrAwMCcwMC4wIkU!5e0!3m2!1sen!2sin!4v1"

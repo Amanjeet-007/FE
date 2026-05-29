@@ -350,7 +350,7 @@ const Navbar = ({ filter = true }) => {
       )}
 
       {/* Navbar */}
-      <nav className="h-16 md:h-20 px-4 md:px-8 flex items-center justify-between border-b border-slate-50 fixed top-0 w-full bg-white">
+      <nav className="h-16 md:h-20 md:px-4 flex items-center justify-between border-b border-slate-50 fixed top-0 w-full bg-white">
         <div className="flex-1 md:hidden">
           <div onClick={() => setAll(true)} className="cursor-pointer w-fit">
             <svg
@@ -371,11 +371,11 @@ const Navbar = ({ filter = true }) => {
           <Search />
         </div>
 
-        <div className="flex flex-1 justify-end items-center gap-2 md:gap-5">
+        <div className="flex flex-1 justify-end items-center gap-2 md:gap-5 ">
           {/* Notification (if user is logged in) */}
-          {user && (
+          { (
             <div
-              className="notification p-2 rounded-full text-black relative cursor-pointer hover:bg-gray-100"
+              className="notification p-2 -mr-10 md:-mr-2 rounded-full text-black relative cursor-pointer hover:bg-gray-100"
               onClick={() => setShowNoti(true)}
             >
               <div className="font-bold absolute items-center flex justify-center px-1 py-.5 top-1 right-4 bg-red-500 text-white text-xs rounded-full">
