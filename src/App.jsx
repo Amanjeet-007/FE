@@ -26,4 +26,5 @@ export const App = createBrowserRouter([
   {path:'/deskboard', element:<Deskboard/>},
   {path:'/request' , element:<BecomeSeller/>},
   {path:'/productDetails/:id',element:<ProductDetails/>},
+  {path:'/order',element:<OrderTracker/>}
 ])

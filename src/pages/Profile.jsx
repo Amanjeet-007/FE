@@ -93,7 +93,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="space-y-4">
+            {/* <div className="space-y-4">
               <h2 className="text-lg font-bold text-gray-900 px-1">Recent Order</h2>
               <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
@@ -115,7 +115,7 @@ export default function Profile() {
                   </button>
                 </Link>
               </div>
-            </div>
+            </div> */}
 
             {/* Desktop Logout Button */}
             <button 

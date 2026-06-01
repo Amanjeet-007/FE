@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Package, Truck, CheckCircle, MapPin, Box, ArrowLeft, Phone } from 'lucide-react';
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";

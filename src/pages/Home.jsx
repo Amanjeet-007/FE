@@ -210,8 +210,8 @@ export default function Home() {
       {/* Categories Section */}
       <section className="py-16 bg-blue-900/5 relative flex ">
         <div className="w-full flex mx-auto px-4 md:px-10 flex-col delay-150 overflow-hidden" style={seeAll?{height:"450px",overflowY:"scroll"}:{height:"350px"}}>
-          <div className="flex justify-between items-end mb-10">
-            <div className="w-full">
+          <div className="flex justify-between items-end mb-10 ">
+            <div className="w-full absolute top-5 bg-[#ecf0f6] z-50">
               <h2 className="md:text-3xl text-2xl font-black text-blue-900 ">
                 Shop By Category
               </h2>

@@ -114,12 +114,9 @@ Delivery Available: ${formData.deliveryAvailable}
   };
 
   return (
-    <section className="py-20 px-6 bg-linear-to-b from-white to-gray-50 min-h-screen relative">
-      <div className="md:-mt-12">
-        <Logo />
-      </div>
+    <section className="bg-linear-to-b from-white to-gray-50 min-h-screen relative">
 
-      <div className="max-w-6xl mt-10 mx-auto text-center">
+      <div className="max-w-6xl mx-auto text-center">
         {/* Heading */}
         <h2 className="text-4xl font-bold mb-3">
           Start Selling & Grow Faster 🚀
@@ -184,7 +181,7 @@ Delivery Available: ${formData.deliveryAvailable}
 
         {/* Urgency */}
         <div className="mt-10 text-sm text-red-500 font-medium animate-pulse">
-          ⚠ Limited onboarding slots this week
+          ⚠ register now to get free selling for 6 month ( valid till July )
         </div>
 
         {/* CTA */}
@@ -477,7 +474,7 @@ Delivery Available: ${formData.deliveryAvailable}
       </div>
 
       {/* Back Button */}
-      <div className="back absolute top-6 right-6">
+      <div className="back absolute top-6 left-6">
         <button
           onClick={() => {
             if (window.history.length > 1) {

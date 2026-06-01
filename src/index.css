@@ -167,7 +167,7 @@ nav {
 }
 
 nav svg {
-    margin: 0px 10px;
+    margin: 0px 15px;
 }
 
 main {
@@ -474,7 +474,7 @@ section{
 
 .group {
     cursor: pointer;
-    min-width: 190px;
+    min-width: 150px;
     min-height: min-content;
 }
 .cat .group{
@@ -574,6 +574,9 @@ footer svg:hover {
     section{
         margin-top: 5px;
     }
+    nav{
+        padding: var(--space-1);
+    }
     footer div {
         /* margin: auto; */
         padding: 5px;
@@ -648,4 +651,15 @@ footer svg:hover {
     .gap {
         margin: 0px;
     }
+}
+.test p{
+    font-size: large;
+}
+.test button{
+    padding: 5px 15px;
+    margin: 5px;
+    background-color: #22c55e;
+    font-weight: 700;
+    color: white;
+    border-radius: 10px;
 }
