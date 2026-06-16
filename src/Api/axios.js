@@ -5,13 +5,11 @@ const isProduction = true;
 
 
 const api = axios.create({
-  // baseURL: import.meta.env.VITE_Backend_ENDPOINT ,  // production 
-  // baseURL:  "http://localhost:5000/api" ,             // test 
-  baseURL: isProduction ? '/api' : 'https://neoec-backend.onrender.com/api', 
-  withCredentials: true
-  // headers: {
-  //   "Content-Type": "application/json",
-  // },
+  baseURL: isProduction ? '/api' : import.meta.env.VITE_Backend_ENDPOINT || "http://localhost:5000/api",
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 // global error handling

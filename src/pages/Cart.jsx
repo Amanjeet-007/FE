@@ -81,7 +81,7 @@ export default function Cart() {
                           <p className="text-gray-500 text-sm">Unit Price: ₹{item.price}</p>
                         </div>
                         <button 
-                          onClick={() => handleDelete(item.productId)}
+                          onClick={() => handleDelete(item.productId,item.quantity)}
                           className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                         >
                           <Trash2 size={20} />

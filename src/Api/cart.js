@@ -26,7 +26,7 @@ export async function getCart() {
   }
 }
 
-export async function deleteProductFromCart(id){
-  const res = await api.delete(`/cart/remove/${id}`)
+export async function deleteProductFromCart(id,quantity){
+  const res = await api.delete(`/cart/remove/${id}`,{quantity})
   console.log(res.data)
 }
