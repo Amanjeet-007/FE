@@ -1,11 +1,14 @@
 //* eslint-disable no-undef */
 import axios from "axios";
+const isProduction = true;
+
+
 
 const api = axios.create({
   // baseURL: import.meta.env.VITE_Backend_ENDPOINT ,  // production 
-  baseURL:'/api',
   // baseURL:  "http://localhost:5000/api" ,             // test 
-  withCredentials: true, // important if using cookies/JWT
+  baseURL: isProduction ? '/api' : 'https://neoec-backend.onrender.com/api', 
+  withCredentials: true
   // headers: {
   //   "Content-Type": "application/json",
   // },

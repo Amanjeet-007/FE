@@ -2,8 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://neoec-backend.onrender.com/:path*"
+      "destination": "https://neoec-backend.onrender.com/api/:path*"
     }
   ]
-
 }
