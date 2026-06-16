@@ -2,7 +2,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_Backend_ENDPOINT ,  // production 
+  // baseURL: import.meta.env.VITE_Backend_ENDPOINT ,  // production 
+  baseURL:'/api',
   // baseURL:  "http://localhost:5000/api" ,             // test 
   withCredentials: true, // important if using cookies/JWT
   // headers: {
