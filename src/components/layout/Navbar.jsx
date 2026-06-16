@@ -13,6 +13,7 @@ import { searchProduct } from "../../Api/product";
 import HighlightMatch from "../common/HighlightMatch";
 import { sendOTP, OTPstatus } from "../../Api/auth";
 import Loader from "../common/Loader";
+import { useNavigate } from "react-router-dom";
 
 // Verification Popup Component
 function VarifyPopUp({ onClose, email }) {
@@ -169,6 +170,7 @@ const Search = () => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const navigater = useNavigate()
 
   useEffect(() => {
     if (!query) setSuggestions([]);
@@ -204,15 +206,17 @@ const Search = () => {
         >
           <path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"></path>
         </svg>
+        <form onSubmit={()=>{navigater(`/searched/${query}`)}}>
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Search Anything"
-          className="w-full px-5 rounded-full bg-gray-100 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition
-  "
+          className="w-full px-5 rounded-full bg-gray-100 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition"
+          
         />
+        </form>
       </label>
       {suggestions.length > 0 && (
         <div className="rounded-t-0 absolute top-full left-0 right-0 w-[85%] mx-4 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden max-h-60 overflow-y-auto">
@@ -221,6 +225,8 @@ const Search = () => {
               key={item._id}
               onClick={() => {
                 setQuery(item.name);
+                //navigate to searched.jsx with parameter (suggetions)
+                navigater(`/searched/${item.name}`)
                 setSuggestions([]);
               }}
               className={`flex items-center px-4 py-3 text-sm cursor-pointer transition ${index === activeIndex ? "bg-blue-50 text-blue-600" : "text-gray-700 hover:bg-gray-100"}`}
@@ -269,7 +275,6 @@ const Navbar = ({ filter = true }) => {
 
   useEffect(() => {
     if (res) {
-      console.log(res);
       setRole(res.role);
       // if user is not varified
       if (!res.varified) {

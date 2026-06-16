@@ -29,3 +29,9 @@ export const searchProduct = async (name) => {
   const res = await api.get(`/products/search?q=${name}`);
   return res.data;
 };
+
+export const searchResult = async (productname)=>{
+  const res  = await api.get(`/products/result/${productname}`)
+  console.log(res.data.prodcuts)
+  return res.data.products
+}
