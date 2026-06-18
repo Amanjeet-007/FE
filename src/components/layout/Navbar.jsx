@@ -180,10 +180,10 @@ const Search = () => {
         return;
       }
       const res = await searchProduct(query);
-      setSuggestions(res);
+      setSuggestions(res.suggestions);
     }, 400);
     return () => clearTimeout(delay);
-  }, [query]);
+  },[query]);
 
   const handleKeyDown = (e) => {
     if (e.key === "ArrowDown")
@@ -437,7 +437,7 @@ const Navbar = ({ filter = true }) => {
         </div>
       </nav>
 
-      {/* Mobile Search */}
+      {/* Mobile Search for */}
       <div className="md:hidden border-b border-slate-100 mten mt-16">
         <Search />
       </div>

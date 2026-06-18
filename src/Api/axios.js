@@ -1,11 +1,11 @@
 //* eslint-disable no-undef */
 import axios from "axios";
-const isProduction = true;
+const isProduction = false;
 
-
+// : import.meta.env.VITE_Backend_ENDPOINT ||
 
 const api = axios.create({
-  baseURL: isProduction ? '/api' : import.meta.env.VITE_Backend_ENDPOINT || "http://localhost:5000/api",
+  baseURL: isProduction ? '/api' : "http://localhost:5000/api",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",

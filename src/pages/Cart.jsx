@@ -28,7 +28,7 @@ export default function Cart() {
     fetchCart();
   }, []); // Empty dependency array: only runs on mount
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id,quantity) => {
     // 1. Optimistic Update: Remove from UI immediately
     const previousItems = [...cart.items];
     setCart((prev) => ({
@@ -37,7 +37,7 @@ export default function Cart() {
     }));
 
     try {
-      await deleteProductFromCart(id);
+      await deleteProductFromCart(id,quantity);
       console.log("Deleted successfully");
     } catch (err) {
       // 2. Rollback if API fails

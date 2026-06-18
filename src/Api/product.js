@@ -27,6 +27,7 @@ export const deleteProduct = async (id) => {
 
 export const searchProduct = async (name) => {
   const res = await api.get(`/products/search?q=${name}`);
+  // console.log(res.data)
   return res.data;
 };
 
@@ -34,4 +35,10 @@ export const searchResult = async (productname)=>{
   const res  = await api.get(`/products/result/${productname}`)
   console.log(res.data.prodcuts)
   return res.data.products
+}
+
+export const recentSearch = async ()=>{
+  const res = await api.get('/products/recentsearch')
+  console.log(res.data)
+  return res.data
 }
