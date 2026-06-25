@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import Logo from "../components/common/Logo";
+// import Logo from "../components/common/Logo";
 import { useNavigate } from "react-router-dom";
 
 export default function BecomeSeller() {
@@ -119,7 +119,7 @@ Delivery Available: ${formData.deliveryAvailable}
       <div className="max-w-6xl mx-auto text-center">
         {/* Heading */}
         <h2 className="text-4xl font-bold mb-3">
-          Start Selling & Grow Faster 🚀
+          Sell & Grow Faster 🚀
         </h2>
 
         <p className="text-sm text-gray-500">
@@ -181,7 +181,7 @@ Delivery Available: ${formData.deliveryAvailable}
 
         {/* Urgency */}
         <div className="mt-10 text-sm text-red-500 font-medium animate-pulse">
-          ⚠ register now to get free selling for 6 month ( valid till July )
+          ⚠ Sell Free for 6 Month
         </div>
 
         {/* CTA */}

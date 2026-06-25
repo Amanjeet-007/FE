@@ -1,6 +1,6 @@
 //* eslint-disable no-undef */
 import axios from "axios";
-const isProduction = false;
+const isProduction = true;
 
 // : import.meta.env.VITE_Backend_ENDPOINT ||
 

@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import HighlightMatch from "../common/HighlightMatch";
 import { searchProduct } from "../../Api/product";
+import { useNavigate } from "react-router-dom";
 
 const Search = () => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const navigater = useNavigate()
 
   useEffect(() => {
     if (!query) setSuggestions([]);
@@ -18,7 +20,7 @@ const Search = () => {
       }
   
       const res = await searchProduct(query);
-      setSuggestions(res);
+      setSuggestions(res.suggestions);
     }, 400); // debounce
 
     return () => clearTimeout(delay);
@@ -68,6 +70,8 @@ const Search = () => {
               onClick={() => {
                 setQuery(item.name);
                 setSuggestions([]);
+                navigater(`/searched/${item.name}`)
+
               }}
               className={`flex items-center px-4 py-3 text-sm cursor-pointer transition
         ${

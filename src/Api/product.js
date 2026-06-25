@@ -27,7 +27,6 @@ export const deleteProduct = async (id) => {
 
 export const searchProduct = async (name) => {
   const res = await api.get(`/products/search?q=${name}`);
-  // console.log(res.data)
   return res.data;
 };
 
