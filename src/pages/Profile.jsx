@@ -61,7 +61,8 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <>
+    <div className="min-h-screen dark:bg-gray-900 bg-gray-50 flex flex-col">
       <Navbar filter={false} />
 
       {/* 4. Add the Modal Component */}
@@ -74,26 +75,28 @@ export default function Profile() {
       <main className="flexgrow container mx-auto px-4 py-8 mb-20 md:mb-0 mten">
         <div className="max-w-6xl mx-auto">
           {/* Header / User Intro */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6 flex flex-col md:flex-row items-center gap-6">
+          <div className="bg-white dark:bg-gray-800 dark:text-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6 flex flex-col md:flex-row items-center gap-6">
             <div className="relative">
-              <div className="w-24 h-24 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+              <div className="w-24 h-24 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 dark:text-white ">
                 <User size={48} />
               </div>
+              <Link to={'/settings'}>
               <button className="absolute bottom-0 right-0 p-1.5 bg-white border border-gray-200 rounded-full shadow-sm text-gray-600 hover:text-indigo-600">
                 <Settings size={16} />
               </button>
+              </Link>
             </div>
 
             <div className="text-center md:text-left flexgrow">
-              <h1 className="text-2xl font-bold text-gray-900">{user?.name}</h1>
-              <p className="text-gray-500">{user?.email}</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white ">{user?.name}</h1>
+              <p className="text-gray-500 dark:text-white ">{user?.email}</p>
               <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-3">
-                <span className="px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-medium rounded-full">Pro Member</span>
-                <span className="px-3 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-full">12 Orders</span>
+                <span className="px-3 py-1 bg-indigo-50  text-indigo-700 text-xs font-medium rounded-full">Pro Member</span>
+                <span className="px-3 py-1 bg-green-50  text-green-700 text-xs font-medium rounded-full">12 Orders</span>
               </div>
             </div>
 
-            <div className="space-y-4">
+            {/* <div className="space-y-4">
               <h2 className="text-lg font-bold text-gray-900 px-1">Recent Order</h2>
               <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
@@ -115,7 +118,7 @@ export default function Profile() {
                   </button>
                 </Link>
               </div>
-            </div>
+            </div> */}
 
             {/* Desktop Logout Button */}
             <button 
@@ -156,7 +159,8 @@ export default function Profile() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
+      <Footer />
+    </>
   );
 }

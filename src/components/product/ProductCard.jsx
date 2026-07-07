@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+//* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import {
   ShoppingCart,
@@ -60,8 +60,8 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <Link to={`/productDetails/${product._id}`}>
-      <div className="group relative flex flex-col h-full bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
+    <Link to={`/productDetails/${product._id}`}  >
+      <div className="group relative flex flex-col h-full min-w-120 bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
         
         {/* Image */}
         <div className="relative aspect-square overflow-hidden bg-gray-100">
@@ -84,7 +84,7 @@ const ProductCard = ({ product }) => {
         </div>
 
         {/* Content */}
-        <div className="flex flex-col flex-grow p-4">
+        <div className="flex flex-col grow p-4">
           {/* Rating */}
           <div className="flex items-center gap-1 mb-1">
             <Star className="text-yellow-400 fill-yellow-400" size={14} />

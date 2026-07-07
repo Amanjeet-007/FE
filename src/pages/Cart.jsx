@@ -5,6 +5,7 @@ import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import { getCart, deleteProductFromCart } from "../Api/cart";
 import { Link } from "react-router-dom";
+
 export default function Cart() {
   const [cart, setCart] = useState({ items: [], totalPrice: 0 });
   const [loading, setLoading] = useState(true);
@@ -28,7 +29,7 @@ export default function Cart() {
     fetchCart();
   }, []); // Empty dependency array: only runs on mount
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, quantity) => {
     // 1. Optimistic Update: Remove from UI immediately
     const previousItems = [...cart.items];
     setCart((prev) => ({
@@ -37,7 +38,7 @@ export default function Cart() {
     }));
 
     try {
-      await deleteProductFromCart(id);
+      await deleteProductFromCart(id, quantity);
       console.log("Deleted successfully");
     } catch (err) {
       // 2. Rollback if API fails
@@ -46,11 +47,19 @@ export default function Cart() {
     }
   };
 
-  const subtotal = cart.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const subtotal = cart.items.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0,
+  );
   const shipping = cart.items.length > 0 ? 15 : 0;
   const total = subtotal + shipping;
 
-  if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading...
+      </div>
+    );
 
   return (
     <>
@@ -63,25 +72,44 @@ export default function Cart() {
 
           {cart.items.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-2xl shadow-sm">
-              <h2 className="text-xl font-semibold text-gray-400">Your cart is empty</h2>
-              <Link to="/store"><button className="mt-4 text-indigo-600 font-medium">Continue Shopping</button></Link>
+              <h2 className="text-xl font-semibold text-gray-400">
+                Your cart is empty
+              </h2>
+              <Link to="/store">
+                <button className="mt-4 text-indigo-600 font-medium">
+                  Continue Shopping
+                </button>
+              </Link>
             </div>
           ) : (
             <div className="flex flex-col lg:flex-row gap-8">
               {/* LEFT: CART ITEMS */}
               <div className="lg:w-2/3 space-y-4">
                 {cart.items.map((item) => (
-                  <div key={item.productId} className="bg-white p-4 rounded-xl shadow-sm flex gap-4 hover:shadow-md transition-shadow">
-                    <img src={item.image} alt={item.name} className="w-24 h-24 object-cover rounded-lg border" />
-                    
+                  <div
+                    key={item.productId}
+                    className="bg-white p-4 rounded-xl shadow-sm flex gap-4 hover:shadow-md transition-shadow"
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-24 h-24 object-cover rounded-lg border"
+                    />
+
                     <div className="flex flex-col justify-between grow">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="font-semibold text-lg text-gray-800">{item.name}</h3>
-                          <p className="text-gray-500 text-sm">Unit Price: ₹{item.price}</p>
+                          <h3 className="font-semibold text-lg text-gray-800">
+                            {item.name}
+                          </h3>
+                          <p className="text-gray-500 text-sm">
+                            Unit Price: ₹{item.price}
+                          </p>
                         </div>
-                        <button 
-                          onClick={() => handleDelete(item.productId)}
+                        <button
+                          onClick={() =>
+                            handleDelete(item.productId, item.quantity)
+                          }
                           className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                         >
                           <Trash2 size={20} />
@@ -91,9 +119,13 @@ export default function Cart() {
                       <div className="flex justify-between items-center mt-2">
                         {/* Simple Quantity Display (Add buttons here later) */}
                         <div className="flex items-center border rounded-lg px-2 py-1 gap-3">
-                           <span className="text-sm font-medium">Qty: {item.quantity}</span>
+                          <span className="text-sm font-medium">
+                            Qty: {item.quantity}
+                          </span>
                         </div>
-                        <span className="font-bold text-indigo-600">₹{item.price * item.quantity}</span>
+                        <span className="font-bold text-indigo-600">
+                          ₹{item.price * item.quantity}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -107,11 +139,15 @@ export default function Cart() {
                   <div className="space-y-3 text-gray-600">
                     <div className="flex justify-between">
                       <span>Subtotal</span>
-                      <span className="font-medium text-gray-900">₹{subtotal}</span>
+                      <span className="font-medium text-gray-900">
+                        ₹{subtotal}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span>Shipping</span>
-                      <span className="font-medium text-gray-900">₹{shipping}</span>
+                      <span className="font-medium text-gray-900">
+                        ₹{shipping}
+                      </span>
                     </div>
                     <div className="border-t pt-3 flex justify-between font-bold text-xl text-gray-900">
                       <span>Total</span>

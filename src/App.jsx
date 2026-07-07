@@ -11,6 +11,11 @@ import Auth from "./pages/Auth.jsx";
 import CustomerService from "./pages/Service.jsx"
 import Deskboard from './pages/Deskboard.jsx'
 import BecomeSeller from "./pages/BecomeASeller.jsx";
+import Searched from "./pages/Searched.jsx";
+import Settings from "./pages/Settings.jsx";
+import Payment from "./pages/Payment.jsx";
+
+//deploy new
 
 export const App = createBrowserRouter([
   {path:"/",element:<Home/>},
@@ -24,4 +29,10 @@ export const App = createBrowserRouter([
   {path:'/deskboard', element:<Deskboard/>},
   {path:'/request' , element:<BecomeSeller/>},
   {path:'/productDetails/:id',element:<ProductDetails/>},
+  {path:'/order',element:<OrderTracker/>},
+  {path:`/searched/:productname`,element:<Searched/>},
+  {path:`/settings`,element:<Settings/>},
+  {path:`/payment`,element:<Payment/>},
+
+
 ])
