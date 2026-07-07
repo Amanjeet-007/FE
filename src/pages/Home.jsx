@@ -1,133 +1,82 @@
-//* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
+import { allProducts } from "../Api/shop"; // Api
+
+//Sub components
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
+import SaleGrid from "../components/SalesGrid";
+import StoreMap from "../components/StoreMap";
 import ProductCard from "../components/product/ProductCard";
-import { allProducts } from "../Api/shop";
+import AdsSlider from "../components/AdsSlider";
 
-const Ads = [
-  {
-    img: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=2070&auto=format&fit=crop",
-    heading: "Summer Collection",
-    slogan: "Up to 40% off on premium styles for a limited time.",
-    tag: ["New Arrivals"],
-    button: "path",
-  },
-];
-
-const categories = [
+const CATEGORIES = [
   {
     name: "Men",
-    Path: "/Mens",
+    path: "/mens",
     img: "https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?q=80&w=2071",
   },
   {
     name: "Women",
-    Path: "/Mens",
+    path: "/womens",
     img: "https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?q=80&w=2070",
   },
   {
     name: "Kids",
-    Path: "/Mens",
+    path: "/kids",
     img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCF1iij5gJ5ZxFmQFNJ3Qjpw8v4unL61imt_Aw-kI-phLzQ-Ff_JayCoFFo1g287ephUF-WOMcFCWBR8C-2EhzPkREBvhPpoqVUKBS8HX5IyRtBrTxrQDQrlS3TQZfvGD1eek1zGIPZmWONqn44ufmDYsdhEu84IjsWP7xOfC-ggiRAa17Ya0bYkNMIs_Km_iqSED0O_-vvJOaH5LkBFzkHhmiYmTOnX16LfOnf_fro2RKv6EheOy0KaSCm2ibx_0l-um0bXOtJLCw",
   },
   {
     name: "Tech",
-    Path: "/Mens",
+    path: "/tech",
     img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070",
   },
   {
     name: "Watches",
-    path: "/",
+    path: "/watches",
     img: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?q=80&w=2038",
   },
-   {
-    name: "Grosery",
-    path: "/",
+  {
+    name: "Grocery",
+    path: "/grocery",
     img: "https://img-cdn.misfitsmarket.com/melodious-taiyaki-9pkr2z/aH6BNUMqNJQqILDE_20240730_Assortment_4_Fill.jpg",
   },
   {
     name: "Cake",
-    path: "/",
+    path: "/cake",
     img: "https://whipped.in/cdn/shop/files/WhatsAppImage2023-12-12at11.29.28PM_1080x.jpg?v=1748459537",
   },
-  
 ];
 
-function SaleGrid() {
-  const items = [
-    {
-      img: `https://m.media-amazon.com/images/I/61VHvg7wvCL._AC_UL480_FMwebp_QL65_.jpg`,
-      title: " Upto 65% Off",
-    },
-    {
-      img: "https://m.media-amazon.com/images/I/71oW9ddfGsL._AC_UL480_FMwebp_QL65_.jpg",
-      title: "@35% Flat",
-    },
-    {
-      img: "https://m.media-amazon.com/images/I/81EvwnQJXmL._AC_UL480_FMwebp_QL65_.jpg",
-      title: "BOGO Free",
-    },
-    {
-      img: null,
-      title: "More...",
-    },
-  ];
-
-  return (
-    <div className="flex flex-wrap gap-4 min-h-87.5 md:h-full">
-      {items.map((item, i) => {
-        return item.img ? (
-          <div
-            key={i}
-            className="relative w-full md:w-[45%] overflow-hidden rounded-3xl group h-38 md:h-1/2 bg-cover bg-center transition-transform duration-500 hover:scale-[1.02] border-2 border-blue-600 "
-            style={{
-              backgroundImage: `url(${item.img})`,
-            }}
-          >
-            <div className="absolute inset-0 bg-linear-to-t from-blue-900/80 to-transparent p-4 flex items-end">
-              <span className="text-white font-bold text-xs bg-blue-600 px-3 py-1 rounded-full">
-                {item.title}
-              </span>
-            </div>
-          </div>
-        ) : (
-          <div
-            key={i}
-            className="h-38 w-full md:w-[45%] md:h-1/2 rounded-3xl bg-[#475ea3] flex items-center justify-center text-white font-black text-xl hover:bg-blue-700 cursor-pointer transition-all shadow-lg shadow-blue-200"
-          >
-            {item.title}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
 export default function Home() {
-  const [index, setIndex] = useState(0);
-  const [Products, setProducts] = useState([]);
-  const [seeAll , setSeeAll] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [seeAll, setSeeAll] = useState(false);
 
   useEffect(() => {
-    async function getProduct() {
-      const products = await allProducts();
-      setProducts(products);
+    let isMounted = true;
+    async function fetchProducts() {
+      try {
+        const data = await allProducts();
+        if (isMounted) setProducts(data || []);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
     }
-    getProduct();
+    fetchProducts();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
-    <div className="bg-slate-50 min-h-screen font-sans">
+    <div className="bg-slate-50 dark:bg-slate-700 min-h-screen font-sans dark:text-white">
       <Navbar />
 
       {/* Hero & Ads Section */}
-      <section style={{marginTop:"10px"}} className="max-w-360 mx-auto px-0 md:px-10 h-min py-4 overflow-hidden mt-0">
+      <section className="max-w-360 mx-auto px-0 md:px-10 py-4 overflow-hidden ">
         <div className="flex flex-col md:flex-row gap-6 h-auto md:h-[65vh]">
           {/* Left: On Sale Grid */}
           <div className="w-[90%] m-auto h-full md:w-1/3 flex flex-col">
-            <h2 className="text-2xl font-black text-blue-900 mb-4 flex items-center gap-2">
+            <h2 className="text-2xl font-black dark:text-white text-blue-900 mb-4 flex items-center gap-2">
               <span className="w-8 h-1 bg-blue-600 rounded-full"></span> On Sale
             </h2>
             <SaleGrid />
@@ -135,112 +84,40 @@ export default function Home() {
 
           {/* Middle: Main Ads Banner */}
           <div className="w-[90%] m-auto md:w-1/3 relative h-[50vh] md:h-full rounded-[2.5rem] overflow-hidden shadow-2xl group">
-            {Ads.map((el, i) => (
-              <div
-                key={i}
-                className={`absolute inset-0 transition-opacity duration-1000 ${i === index ? "opacity-100 z-10" : "opacity-0 z-0"}`}
-              >
-                <img
-                  src={el.img}
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                  alt=""
-                />
-                <div className="absolute inset-0 bg-linear-to-b from-transparent via-blue-900/20 to-blue-900/90 flex flex-col justify-end p-8 text-white">
-                  <span className="bg-blue-500 text-[10px] uppercase tracking-[0.2em] font-bold w-fit px-3 py-1 rounded mb-3">
-                    {el.tag[0]}
-                  </span>
-                  <h2 className="text-4xl font-black mb-2">{el.heading}</h2>
-                  <p className="text-blue-100 text-sm mb-6 opacity-90">
-                    {el.slogan}
-                  </p>
-                  <button className="bg-white text-blue-900 px-8 py-3 rounded-2xl font-bold w-fit hover:bg-blue-50 transition-colors active:scale-95 shadow-lg">
-                    Shop Collection
-                  </button>
-                </div>
-              </div>
-            ))}
+            <AdsSlider />
           </div>
 
-          {/* Right: Map/Explore */}
-          <div className="w-[90%] m-auto md:w-1/3 h-[40vh] md:h-full relative  rounded-[2.5rem] overflow-hidden shadow-xl border-4 border-white">
-            <iframe
-              className="absolute inset-0 w-full h-full grayscale opacity-50"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1!2d0!3d0!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTPCsDAwJzAwLjAiTiAwwrAwMCcwMC4wIkU!5e0!3m2!1sen!2sin!4v1"
-              style={{ border: "0" }}
-              allowFullScreen=""
-              loading="lazy"
-            ></iframe>
-            <div className="absolute inset-0 bg-blue-900/80 backdrop-blur-[2px] flex flex-col items-center justify-center text-white p-6 text-center">
-              <div className="w-16 h-16 bg-blue-500/30 rounded-full flex items-center justify-center mb-4 animate-pulse">
-                <svg
-                  className="w-8 h-8 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-              </div>
-              
-              <h3 className="text-2xl font-bold mb-1">Explore Nearby</h3>
-              <p className="text-blue-200 text-sm font-light">
-                Find local flagship stores near your location
-              </p>
-
-              <button className="mt-4 px-4 py-2 bg-white text-blue-600 rounded-lg shadow">
-                Find Stores
-              </button>
-            </div>
-                
-          </div>
+          {/* Right: Map/Explore Section */}
+          <StoreMap />
         </div>
       </section>
 
       {/* Categories Section */}
-      <section className="py-16 bg-blue-900/5 relative flex ">
-        <div className="w-full flex mx-auto px-4 md:px-10 flex-col delay-150 overflow-hidden" style={seeAll?{height:"450px",overflowY:"scroll"}:{height:"350px"}}>
-          <div className="flex justify-between items-end mb-10 ">
-            <div className="w-full absolute top-5 bg-[#ecf0f6] z-50">
-              <h2 className="md:text-3xl text-2xl font-black text-blue-900 ">
+      <section className="py-16 bg-blue-900/5 relative flex">
+        <div
+          className="w-full flex mx-auto px-4 md:px-10 flex-col transition-all duration-300 overflow-hidden"
+          style={
+            seeAll
+              ? { height: "450px", overflowY: "scroll" }
+              : { height: "350px" }
+          }
+        >
+          <div className="flex justify-between items-end mb-10">
+            <div className="w-full absolute top-5 bg-[#ecf0f6] dark:bg-transparent z-40">
+              <h2 className="md:text-3xl text-2xl font-black text-blue-900 dark:text-white">
                 Shop By Category
               </h2>
-              <p className="text-blue-600/60 font-medium">
+              <p className="text-blue-600/60 font-medium dark:text-white">
                 Curated collections just for you
               </p>
             </div>
-            <button className="text-blue-600 bg-blue-900/5 -ml-4 w-full z-50 p-2 md:bg-transparent font-bold hover:underline underline-offset-8 absolute md:relative bottom-1  md:bottom-0 md:left-0 " onClick={()=>{setSeeAll(el=>!el)}}>
-              View All Categories
-              <br />
-              
-              <span className="md:hidden w-full flex items-center justify-center" style={seeAll?{rotate:"180deg"}:{rotate:"0deg"}}>
-                <svg
-                  width={30}
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="rgb(21, 93, 252)"
-                >
-                  <path d="M12 15.6315L20.9679 10.8838L20.0321 9.11619L12 13.3685L3.9679 9.11619L3.03212 10.8838L12 15.6315Z"></path>
-                </svg>
-              </span>
-            </button>
           </div>
 
-          <div className="cat flex md:gap-8 md:overflow-x-auto flex-wrap pb-6 no-scrollbar w-full justify-around">
-            {categories.map((el, i) => (
+          <div className="cat flex md:gap-14 gap-1 md:overflow-x-auto flex-wrap pb-6 no-scrollbar w-full justify-around mt-9 md:mt-16 ">
+            {CATEGORIES.map((el) => (
               <div
-                key={i}
-                className="flex flex-col items-center m-7 cursor-pointer"
+                key={el.name}
+                className="flex flex-col items-center m-2 cursor-pointer group"
               >
                 <div className="relative md:w-28 md:h-28 w-15 h-15 mb-4">
                   <div className="absolute inset-0 bg-blue-600 rounded-full scale-0 group-hover:scale-110 transition-transform duration-300 opacity-20"></div>
@@ -255,7 +132,33 @@ export default function Home() {
               </div>
             ))}
           </div>
+          
+          <button
+            className="text-blue-600 bg-blue-900/5 -ml-4 w-full p-2 md:bg-transparent font-bold hover:underline underline-offset-8 bottom-0 md:relative md:bottom-0 md:left-0 absolute z-50"
+            onClick={() => setSeeAll((prev) => !prev)}
+          >
+            View All Categories
+            <br />
+            <span
+              className="md:hidden w-full flex items-center justify-center transition-transform duration-300"
+              style={
+                seeAll
+                  ? { transform: "rotate(180deg)" }
+                  : { transform: "rotate(0deg)" }
+              }
+            >
+              <svg
+                width={30}
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="rgb(21, 93, 252)"
+              >
+                <path d="M12 15.6315L20.9679 10.8838L20.0321 9.11619L12 13.3685L3.9679 9.11619L3.03212 10.8838L12 15.6315Z"></path>
+              </svg>
+            </span>
+          </button>
         </div>
+
       </section>
 
       {/* Trending Section */}
@@ -267,26 +170,25 @@ export default function Home() {
             </h2>
             <div className="h-0.5 w-full bg-blue-100 hidden sm:block"></div>
           </div>
-          {/* Mobile Swipe Indicator */}
           <span className="text-xs font-bold text-blue-400 md:hidden animate-pulse">
             Swipe →
           </span>
         </div>
 
-        {/* Responsive Wrapper: Scroll on mobile, Grid on desktop */}
         <div className="relative">
           <div className="flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-auto md:overflow-visible pb-8 snap-x snap-mandatory no-scrollbar">
-            {Products.map((el, i) => (
+            {products.map((product, i) => (
               <div
-                key={i}
+                key={product.id || i}
                 className="max-w-70 sm:min-w-[320px] md:min-w-full snap-center transform transition-all duration-300 hover:md:-translate-y-2"
               >
-                <ProductCard product={el} />
+                <ProductCard product={product} />
               </div>
             ))}
           </div>
         </div>
       </section>
+
       <Footer />
     </div>
   );

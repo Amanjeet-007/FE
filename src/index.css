@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 /* * {
     padding: 0;
     margin: 0;
@@ -10,6 +12,9 @@ body {
     height: 100%;
     width: 100%;
     overflow-x: hidden;
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 :root {
@@ -155,12 +160,14 @@ header {
     border: 0px;
 
 }
+nav, .search_filter, .filter div, .Ads , .more{
+    display: flex;
+}
 
 nav {
     box-shadow: 2px 0px 5px rgb(214, 214, 214);
     color: var(--sec2-color);
     padding: var(--space-6);
-    display: flex;
     align-items: center;
     justify-content: space-between;
     z-index: 99;
@@ -174,11 +181,11 @@ main {
     height: 100%;
     width: 100vw;
     background-color: var(--primary-color);
-    color: rgb(0, 0, 0);
+    color: var(--palette-gray-950);
 }
 
 input {
-    color: black;
+    color: var(--palette-gray-950);
 }
 
 .logo {
@@ -209,7 +216,7 @@ input {
 section {
     height: 100%;
     padding-top: 25px;
-    color: black;
+    color: var(--palette-gray-950);
 }
 
 .section {
@@ -220,19 +227,14 @@ section {
     display: block;
 }
 
-.menuIcon {
-    display: none;
-}
-
 .search_filter {
-    display: flex;
     align-items: center;
     justify-content: space-around;
     margin-top: 10px;
     padding: 5px;
 }
 
-.search_filter .search {
+.search_filter .search , .menuIcon {
     display: none;
 }
 
@@ -264,12 +266,7 @@ button {
     border: none;
 }
 
-.filter {
-    display: flex;
-}
-
 .filter div {
-    display: flex;
     padding: 2px 20px;
     margin: 4px 20px;
     font-size: 18px;
@@ -309,8 +306,8 @@ button {
     animation-duration: .3s;
     padding-bottom: 20px;
     overflow-x: visible;
-    background-color: rgba(0, 98, 255, 0.959);
-    color: black;
+    background-color: var(--palette-brand-600);
+    color: var(--palette-gray-950);
     mix-blend-mode: blur(20px);
 }
 
@@ -318,7 +315,7 @@ button {
     padding: 5px 20px;
     cursor: pointer;
     margin: 5px;
-    color: white;
+    color: var(--palette-brand-50);
     transition: .3s;
 }
 
@@ -327,6 +324,9 @@ button {
 }
 section{
     margin-top:65px ;
+}
+.emtbtn{
+    background-color: var(--palette-warning);
 }
 
 
@@ -351,7 +351,6 @@ section{
 
 /* main */
 .Ads {
-    display: flex;
     justify-content: space-between;
     height: 450px;
     padding: 10px;
@@ -366,7 +365,7 @@ section{
 }
 
 .offerTag {
-    background-color: #1e3b8ab7;
+    background-color: var(--palette-brand-900);
     position: absolute;
     top: 0px;
     padding: 10px;
@@ -376,12 +375,11 @@ section{
 }
 
 .more {
-    display: flex;
     align-items: center;
     justify-content: center;
     font-size: 25px;
     font-weight: 600;
-    background-color: rgba(87, 87, 87, 0.79);
+    background-color: var(--palette-brand-900);
     cursor: pointer;
 }
 
@@ -417,11 +415,11 @@ section{
 }
 
 .Ads h1 {
-    color: black;
+    color: var(--palette-gray-950);
 }
 
 .heading {
-    color: black;
+    color: var(--palette-gray-950);
     font-size: 25px;
     font-weight: 700;
     margin-top: 20px;
@@ -521,7 +519,7 @@ section{
 }
 
 .rating .cart {
-    background-color: rgb(25, 93, 230);
+    background-color: var(--palette-brand-500);
 }
 
 /* footer */
@@ -554,7 +552,7 @@ li {
 }
 
 li:hover {
-    color: white;
+    color:var(--palette-gray-50);
 }
 
 .social li {

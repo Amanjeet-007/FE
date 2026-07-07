@@ -4,6 +4,7 @@ import BottomMenu from '../components/layout/BottomMenu'
 import { useParams } from "react-router-dom";
 import { searchResult } from "../Api/product";
 import { useState , useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export default function Searched() {
   const [products, setProducts] = useState([]);
@@ -94,10 +95,11 @@ export default function Searched() {
                       {product.stock > 0 ? "In Stock" : "Out of Stock"}
                     </span>
                   </div>
-
+                  <Link to={`/productDetails/${product._id}`}>
                   <button className="w-full mt-4 bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition">
                     View Product
                   </button>
+                  </Link>
                 </div>
               </div>
             ))}

@@ -185,9 +185,8 @@ function States() {
 } // shop analisis (states data jsx)
 
 /// eslint-disable-next-line react/prop-types
-const ProductCard = ({ product , refresh }) => {
-
- async function deleteHandler(id) {
+const ProductCard = ({ product, refresh }) => {
+  async function deleteHandler(id) {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         await deleteProduct(id);
@@ -211,13 +210,19 @@ const ProductCard = ({ product , refresh }) => {
         {/* Category Badge */}
         <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-blue-900 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider shadow-sm">
           {product.category}
-        </span> 
+        </span>
 
         {/* ### more statistics clicks etc */}
         <span className="absolute top-3 right-3">
-          <svg width={25} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,255,225)"><path d="M12 3C11.175 3 10.5 3.675 10.5 4.5C10.5 5.325 11.175 6 12 6C12.825 6 13.5 5.325 13.5 4.5C13.5 3.675 12.825 3 12 3ZM12 18C11.175 18 10.5 18.675 10.5 19.5C10.5 20.325 11.175 21 12 21C12.825 21 13.5 20.325 13.5 19.5C13.5 18.675 12.825 18 12 18ZM12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z"></path></svg>
+          <svg
+            width={25}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="rgba(255,255,225)"
+          >
+            <path d="M12 3C11.175 3 10.5 3.675 10.5 4.5C10.5 5.325 11.175 6 12 6C12.825 6 13.5 5.325 13.5 4.5C13.5 3.675 12.825 3 12 3ZM12 18C11.175 18 10.5 18.675 10.5 19.5C10.5 20.325 11.175 21 12 21C12.825 21 13.5 20.325 13.5 19.5C13.5 18.675 12.825 18 12 18ZM12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z"></path>
+          </svg>
         </span>
-
       </div>
 
       {/* Content Section */}
@@ -270,7 +275,7 @@ const ProductCard = ({ product , refresh }) => {
               </svg>
             </button>
             <button
-              onClick={()=> deleteHandler(product._id)}
+              onClick={() => deleteHandler(product._id)}
               className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-colors"
               title="Delete Product"
             >
@@ -319,12 +324,112 @@ function Products() {
 
   return (
     <div className="flex items-center flex-wrap justify-center md:justify-start w-full">
-      {loading ? "Loading....." : data.map((product, i) => (
-        <div key={i}> 
-          {/* Pass allProducts as a prop to refresh the list after delete */}
-          <ProductCard product={product} refresh={allProducts} />
+      {loading
+        ? "Loading....."
+        : data.map((product, i) => (
+            <div key={i}>
+              {/* Pass allProducts as a prop to refresh the list after delete */}
+              <ProductCard product={product} refresh={allProducts} />
+            </div>
+          ))}
+    </div>
+  );
+}
+
+import { useRef} from "react";
+
+function CustomCategoryDropdown() {
+  const categories = ["Electronics", "Cloths", "Smartphone"];
+  
+  // States to manage input value, open status, and filtered items
+  const [inputValue, setInputValue] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [filteredOptions, setFilteredOptions] = useState(categories);
+  
+  const dropdownRef = useRef(null);
+
+  // Filter options based on input value
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setInputValue(value);
+    setIsOpen(true);
+
+    const filtered = categories.filter((item) =>
+      item.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredOptions(filtered);
+  };
+
+  // Handle option selection
+  const handleSelectOption = (value) => {
+    setInputValue(value);
+    setIsOpen(false);
+  };
+
+  // Close dropdown when clicking outside the component
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div ref={dropdownRef} className="w-full max-w-xs mx-auto relative">
+      <label className="block text-sm font-bold text-slate-600 mb-1">
+        Category
+      </label>
+      
+      {/* Input Box Wrapper */}
+      <div className="relative rounded-md shadow-xs">
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          onFocus={() => setIsOpen(true)}
+          placeholder=""
+          className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 placeholder-slate-400 outline-hidden transition duration-150 ease-in-out focus:ring-1 focus:ring-indigo-500"
+        />
+        
+        <div 
+          className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <svg 
+            className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} 
+            xmlns="http://w3.org" 
+            viewBox="0 0 20 20" 
+            fill="currentColor"
+          >
+            <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+          </svg>
         </div>
-      ))}
+      </div>
+
+      {/* Styled Dropdown Menu Custom List */}
+      {isOpen && filteredOptions.length > 0 && (
+        <ul className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 outline-hidden">
+          {filteredOptions.map((el) => (
+            <li
+              key={el}
+              onClick={() => handleSelectOption(el)}
+              className="cursor-pointer select-none py-2 px-3 text-slate-900 hover:bg-blue-700 hover:text-white transition-colors"
+            >
+              {el}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* Optional: No Results Found Message */}
+      {isOpen && filteredOptions.length === 0 && (
+        <div className="absolute z-10 mt-1 w-full rounded-md bg-white py-2 px-3 text-sm text-slate-500 shadow-lg ring-1 ring-black/5">
+          No categories found.
+        </div>
+      )}
     </div>
   );
 }
@@ -332,7 +437,7 @@ function Products() {
 export default function Deskboard() {
   const [create_one, setCreate_one] = useState(false);
   const [viewState, setViewState] = useState(false);
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Form State matching your Mongoose Schema
   const [formData, setFormData] = useState({
@@ -380,9 +485,9 @@ export default function Deskboard() {
     data.append("name", formData.name);
     data.append("description", formData.description);
     data.append("price", formData.price);
-    
-    if(formData.stock >= 0){
-    data.append("stock", formData.stock);
+
+    if (formData.stock >= 0) {
+      data.append("stock", formData.stock);
     }
     data.append("category", formData.category);
     data.append("brand", formData.brand);
@@ -394,9 +499,8 @@ export default function Deskboard() {
 
     try {
       await createProduct(data); // ✅ SEND FormData
-      setLoading(false)
+      setLoading(false);
       setCreate_one(false);
-      
     } catch (error) {
       console.error("Upload failed", error);
     }
@@ -407,7 +511,7 @@ export default function Deskboard() {
     return all.data.products;
   };
 
-  allProducts()
+  allProducts();
 
   return (
     <div className="min-h-screen bg-[#f8faff] text-slate-900 font-sans">
@@ -426,7 +530,11 @@ export default function Deskboard() {
           </div>
           <div className="flex flex-wrap gap-3">
             <button
-            style ={viewState ? {backgroundColor:"white",color:"gray"}:{backgroundColor:"#0052ff",color:"white"}}
+              style={
+                viewState
+                  ? { backgroundColor: "white", color: "gray" }
+                  : { backgroundColor: "#0052ff", color: "white" }
+              }
               onClick={() => setCreate_one(true)}
               className="px-6 py-2.5 rounded-2xl bg-[#0052ff] text-white font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 hover:-translate-y-0.5 transition-all active:scale-95"
             >
@@ -434,12 +542,15 @@ export default function Deskboard() {
             </button>
             <button
               to="/my product"
-              style={viewState?{backgroundColor:"#0052ff", color:"white"}:{backgroundColor:"white"}}
+              style={
+                viewState
+                  ? { backgroundColor: "#0052ff", color: "white" }
+                  : { backgroundColor: "white" }
+              }
               className="px-6 py-2.5 rounded-2xl border-2 border-slate-200 bg-white text-slate-700 font-bold hover:bg-slate-50 transition-all text-center"
               onClick={() => setViewState((e) => !e)}
             >
-              {viewState ? 
-              "View Products" : "View State"}
+              {viewState ? "View Products" : "View State"}
             </button>
           </div>
         </div>
@@ -482,7 +593,7 @@ export default function Deskboard() {
                   {/* IMAGE INPUT SECTION */}
                   <div className="md:col-span-2">
                     <label className="block text-sm font-bold text-slate-600 mb-1">
-                      Product Images
+                      Product Images (min-1 , max-3)
                     </label>
                     <div className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-2xl p-6 bg-slate-50 hover:bg-slate-100 transition-colors relative">
                       <input
@@ -497,7 +608,7 @@ export default function Deskboard() {
                         Click to upload or drag & drop
                       </p>
                       <p className="text-xs text-slate-400 mt-1">
-                        PNG, JPG up to 10MB
+                        PNG, JPG, Webp up to 1MB
                       </p>
                     </div>
 
@@ -537,7 +648,7 @@ export default function Deskboard() {
 
                   <div>
                     <label className="block text-sm font-bold text-slate-600 mb-1">
-                      Price ($)*
+                      Price*
                     </label>
                     <input
                       name="price"
@@ -564,17 +675,7 @@ export default function Deskboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-slate-600 mb-1">
-                      Category*
-                    </label>
-                    <input
-                      name="category"
-                      required
-                      value={formData.category}
-                      onChange={handleInputChange}
-                      type="text"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200"
-                    />
+                  <CustomCategoryDropdown/>
                   </div>
 
                   <div>
@@ -619,11 +720,7 @@ export default function Deskboard() {
                       type="submit"
                       className="flex-1 px-6 py-3 rounded-2xl bg-[#0052ff] text-white font-bold shadow-lg shadow-blue-200"
                     >
-                      {
-                        loading?
-                        "loading....":
-                        "Publish Product"
-                      }
+                      {loading ? "loading...." : "Publish Product"}
                     </button>
                   </div>
                 </form>

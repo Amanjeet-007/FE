@@ -362,7 +362,7 @@ const Navbar = ({ filter = true }) => {
       )}
 
       {/* Navbar */}
-      <nav className="h-16 md:h-20 md:px-4 flex items-center justify-between border-b border-slate-50 fixed top-0 w-full bg-white">
+      <nav className="h-16 md:h-20 md:px-4 flex items-center justify-between border-b border-slate-50 fixed top-0 w-full bg-white dark:bg-gray-800">
         <div className="flex-1 md:hidden">
           <div onClick={() => setAll(true)} className="cursor-pointer w-fit">
             <svg
@@ -451,12 +451,12 @@ const Navbar = ({ filter = true }) => {
 
       {/* Filters Bar */}
       {filter && (
-        <div className="hidden w-full justify-around md:flex bg-white border-b-2 border-gray-600 h-11 items-center px-4 overflow-x-auto no-scrollbar whitespace-nowrap gap-6 text-sm font-semibold text-slate-500 mten mt-20">
+        <div className="hidden w-full justify-around md:flex bg-white dark:bg-gray-600 dark:text-white border-b-2 border-gray-600 h-11 items-center px-4 overflow-x-auto no-scrollbar whitespace-nowrap gap-6 text-sm font-semibold text-slate-500 mten mt-20">
           {filterOptions.map((el, i) => (
             <Link to={el.path} key={i}>
               <div
                 onClick={i === 0 ? () => setAll(true) : null}
-                className={`flex items-center cursor-pointer hover:text-blue-600 transition-colors relative ${i === 0 ? "text-blue-600" : ""}`}
+                className={`flex items-center cursor-pointer hover:text-blue-600 transition-colors relative ${i === 0 ? "text-blue-600 dark:text-blue-200" : ""}`}
               >
                 {i === 0 && (
                   <svg

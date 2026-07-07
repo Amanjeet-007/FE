@@ -114,12 +114,12 @@ Delivery Available: ${formData.deliveryAvailable}
   };
 
   return (
-    <section className="bg-linear-to-b from-white to-gray-50 min-h-screen relative">
+    <section className="bg-linear-to-b from-white to-gray-50 min-h-screen relative pb-10">
 
-      <div className="max-w-6xl mx-auto text-center">
+      <div className="max-w-6xl mx-auto text-center mt-15">
         {/* Heading */}
         <h2 className="text-4xl font-bold mb-3">
-          Sell & Grow Faster 🚀
+          Sell & Grow Faster
         </h2>
 
         <p className="text-sm text-gray-500">

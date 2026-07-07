@@ -60,7 +60,7 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <Link to={`/productDetails/${product._id}`}>
+    <Link to={`/productDetails/${product._id}`}  >
       <div className="group relative flex flex-col h-full min-w-120 bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
         
         {/* Image */}
